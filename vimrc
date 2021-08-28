@@ -1,6 +1,16 @@
 if has('nvim')
+  if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
+    silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+  endif
   call plug#begin('~/.local/share/nvim/site/plugged/')
 else
+  if empty(glob('~/.vim/autoload/plug.vim'))
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs 
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+  endif
   call plug#begin('~/.vim/plugged')
 endif
 
@@ -72,10 +82,8 @@ set cursorline
 let mapleader=","
 
 " Jump to the last position when reopening a file
-if has("autocmd")
-  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
     \ | exe "normal! g'\"" | endif
-endif
 
 
 " gitgutter
@@ -98,7 +106,7 @@ nmap <F8> :TagbarToggle<CR>
 "nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
 
 " systemtap script ft
-au BufRead,BufNewFile *.stp set filetype=stp
+autocmd BufRead,BufNewFile *.stp set filetype=stp
 
 " vim-commentary
 autocmd FileType c,cpp,cs,java setlocal commentstring=//\ %s
@@ -112,9 +120,9 @@ noremap <leader>/ :Commentary<CR>
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
 inoremap <silent><expr> <TAB>
-  \ pumvisible() ? "\<C-n>" :
-  \ <SID>check_back_space() ? "\<TAB>" :
-  \ coc#refresh()
+    \ pumvisible() ? "\<C-n>" :
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
@@ -235,7 +243,7 @@ if has('nvim')
   autocmd VimEnter * NERDTree | wincmd p
   " Exit Vim if NERDTree is the only window remaining in the only tab
   autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 &&
-    \ exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+      \ exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
 else
   let g:vimfiler_as_default_explorer = 1
   let g:vimfiler_safe_mode_by_default = 0
@@ -250,9 +258,9 @@ else
   let g:vimfiler_ignore_pattern = '^\.|\.git\|\.DS_Store\|\.pyc'
 
   nnoremap <leader>d :<C-u>VimFilerExplorer -split -simple -parent
-    \ -winwidth=35 -toggle -no-quit<CR>
+      \ -winwidth=35 -toggle -no-quit<CR>
   nnoremap <leader>jf :<C-u>VimFilerExplorer -split -simple -parent
-    \ -winwidth=35 -no-quit -find<CR>
+      \ -winwidth=35 -no-quit -find<CR>
   autocmd FileType vimfiler nunmap <buffer> x
   autocmd FileType vimfiler nmap <buffer> x <Plug>(vimfiler_toggle_mark_current_line)
   autocmd FileType vimfiler vmap <buffer> x <Plug>(vimfiler_toggle_mark_selected_lines)
@@ -261,7 +269,7 @@ else
   autocmd FileType vimfiler nmap <buffer> h <Plug>(vimfiler_switch_to_parent_directory)
   autocmd FileType vimfiler nmap <buffer> <C-R> <Plug>(vimfiler_redraw_screen)
   autocmd FileType vimfiler nmap <silent><buffer><expr> <CR>
-    \ vimfiler#smart_cursor_map("\<Plug>(vimfiler_expand_tree)", "\<Plug>(vimfiler_edit_file)")
+      \ vimfiler#smart_cursor_map("\<Plug>(vimfiler_expand_tree)", "\<Plug>(vimfiler_edit_file)")
 endif
 
 
@@ -284,14 +292,14 @@ inoremap <expr> <c-x><c-k> fzf#vim#complete('cat /usr/share/dict/words')
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'window': { 'width': 0.2, 'height': 0.9, 'xoffset': 1 }})
 
 command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always --smart-case --follow -- '.shellescape(<q-args>), 1,
-  \   fzf#vim#with_preview(), <bang>0)
+    \ call fzf#vim#grep(
+    \   'rg --column --line-number --no-heading --color=always --smart-case --follow -- '.shellescape(<q-args>), 1,
+    \   fzf#vim#with_preview(), <bang>0)
 
 command! -bang -nargs=* Rgs
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always --smart-case --follow --sort-files -- '.shellescape(<q-args>), 1,
-  \   fzf#vim#with_preview(), <bang>0)
+    \ call fzf#vim#grep(
+    \   'rg --column --line-number --no-heading --color=always --smart-case --follow --sort-files -- '.shellescape(<q-args>), 1,
+    \   fzf#vim#with_preview(), <bang>0)
 
 nnoremap <silent> <leader>p  :<C-u>Files<CR>
 nnoremap <silent> <leader>gf :<C-u>GFiles<CR>

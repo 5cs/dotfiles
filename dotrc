@@ -1,0 +1,20 @@
+alias ..="cd .."
+alias ...="cd ../.."
+alias t="tmux a || tmux"
+alias tls="tmux ls"
+alias ls="exa"
+alias ll="exa -l"
+alias la="exa -la"
+
+export EDITOR=vim
+export TERM=xterm-256color
+
+shopt -s histappend
+export HISTCONTROL=ignoredups:erasedups
+export HISTSIZE=100000
+export HISTFILESIZE=100000
+export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+
+export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+

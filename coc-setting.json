@@ -1,0 +1,29 @@
+{
+  "languageserver": {
+    "clangd":{
+      "command":"clangd",
+      "filetypes":[
+        "c",
+        "cpp"
+      ],
+      "rootPatterns":[
+        "compile_commands.json",
+        ".git"
+      ],
+      "args":[
+        "--compile-commands-dir=build",
+        "--compile_args_from=filesystem",
+        "--all-scopes-completion",
+        "--background-index",
+        "--cross-file-rename",
+        "--completion-parse=always",
+        "--completion-style=detailed"
+      ]
+    }
+  },
+  "initializationOptions": {
+    "index": {"onChange": true},
+    "highlight": { "lsRanges" : true },
+    "clangd.semanticHighlighting": true
+  }
+}
