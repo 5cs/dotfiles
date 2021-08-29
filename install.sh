@@ -15,33 +15,14 @@ GITHUB=https://github.com
 CPU=$(grep -c ^processor /proc/cpuinfo)
 GLIBC_VERSION=`ldd --version | grep 'GNU libc' | awk '{print $4}' | cut -d'.' -f2`
 GLIBC_VERSION_BASE=18
-
-export PATH=$BIN:$PATH
-
 if [ $(id -u) -ne 0 ]; then DOAS=sudo; fi
 
-sudo yum install -y ninja-build libtool autoconf automake pkgconfig \
-  yum-utils make gcc gcc-c++ curl wget unzip git tmux
-
-sudo yum install -y ncurses-devel libevent-devel ruby \
-  ruby-devel lua lua-devel luajit luajit-devel ctags \
-  python python-devel python3 python3-devel tcl-devel \
-  perl perl-devel perl-ExtUtils-ParseXS perl-ExtUtils-XSpp \
-  perl-ExtUtils-CBuilder perl-ExtUtils-Embed
-
-sudo yum install -y centos-release-scl
-sudo yum install -y devtoolset-8-gcc devtoolset-8-gcc-c++
-
-# jq, nodejs, yarn
-curl -sL https://rpm.nodesource.com/setup_12.x | sudo -E bash -
-sudo yum install -y epel-release
-sudo yum install -y jq nodejs
-sudo npm install -g yarn
-
-# clipboard
-sudo yum install -y xclip xsel
-
 if [ ! -e $BIN ]; then mkdir -p $PKG; fi
+export PATH=$BIN:$PATH
+
+curl -sL https://rpm.nodesource.com/setup_12.x | sudo -E bash -
+sudo yum install -y `cat $DIR/pkglist`
+sudo npm install -g yarn
 
 function wget_tar() {
   wget -qO- $1 | tar -xvz -C $PKG || die "Download $1 failed."
