@@ -65,7 +65,7 @@ function build_rs() {
 }
 
 function wget_rs() {
-  wget -qO- $1/$2.tar.gz | tar -xvz -C $PKG
+  wget_tar $1/$2.tar.gz
   ln -sf $PKG/$2/$3 $BIN/$3
 }
 
