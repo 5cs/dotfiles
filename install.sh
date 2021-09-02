@@ -72,7 +72,7 @@ function wget_rs() {
 if [ $GLIBC_VERSION -lt $GLIBC_VERSION_BASE ]; then
   build_rs $rg rg
   build_rs $fd fd
-  build_rs $bat bat
+  build_rs $bat.git bat
   build_rs $exa exa
 else
   _r=release/download
@@ -113,7 +113,7 @@ vim -c ":call coc#util#install()" -c "qall"
 git clone $GITHUB/neovim/neovim $PKG/neovim
 cd $PKG/neovim && make -j$CPU CMAKE_BUILD_TYPE=Release \
   CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$PKG/nvim" \
-  && sudo make install || die "Build neovim failed."
+  && make install || die "Build neovim failed."
 ln -sf $PKG/nvim/bin/nvim $BIN/nvim
 mkdir -p ~/.config/nvim/
 ln -sf $DIR/nvimrc ~/.config/nvim/init.vim
