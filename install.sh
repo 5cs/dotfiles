@@ -105,7 +105,7 @@ sudo update-alternatives --set vi /usr/local/bin/vim
 ln -sf $DIR/vimrc ~/.vimrc
 vim -c "PlugInstall --sync" -c "PlugUpdate --sync" -c "qall"
 
-# coc
+# coc-vim
 ln -sf $DIR/coc-settings.json ~/.vim/coc-settings.json
 vim -c ":call coc#util#install()" -c "qall"
 
@@ -118,6 +118,10 @@ ln -sf $PKG/nvim/bin/nvim $BIN/nvim
 mkdir -p ~/.config/nvim/
 ln -sf $DIR/nvimrc ~/.config/nvim/init.vim
 nvim -c "PlugInstall --sync" -c "PlugUpdate --sync" -c "qall"
+
+# coc-nvim
+ln -sf $DIR/coc-settings.json ~/.config/nvim/coc-settings.json
+nvim -c ":call coc#util#install()" -c "qall"
 
 # bashrc
 echo "export PATH=$BIN/:\$PATH" >> $DIR/dotrc
