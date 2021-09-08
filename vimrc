@@ -85,6 +85,11 @@ let mapleader=","
 autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
     \ | exe "normal! g'\"" | endif
 
+" Window jump
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
 
 " gitgutter
 nmap ]h <Plug>(GitGutterNextHunk)
