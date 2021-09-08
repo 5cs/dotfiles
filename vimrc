@@ -60,7 +60,6 @@ endif
 colorscheme gruvbox
 let g:lightline = {}
 let g:lightline.colorscheme = 'gruvbox'
-hi Normal guibg=NONE ctermbg=NONE
 
 set relativenumber
 set hidden
@@ -79,6 +78,7 @@ set colorcolumn=80
 set encoding=utf-8
 set signcolumn=yes
 set cursorline
+hi Normal guibg=NONE ctermbg=NONE
 let mapleader=","
 
 " Jump to the last position when reopening a file
@@ -161,6 +161,11 @@ function! s:show_documentation()
     call CocAction('doHover')
   endif
 endfunction
+
+nnoremap <nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
 
 " Highlight the symbol and its references when holding the cursor
 autocmd CursorHold * silent call CocActionAsync('highlight')
