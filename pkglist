@@ -5,6 +5,7 @@ curl
 gcc
 gcc-c++
 git
+htop
 jq
 libtool
 lua

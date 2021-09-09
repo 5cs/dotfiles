@@ -90,7 +90,7 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
-nnoremap <silent> <space>l :noh<cr> " clear hlsearch
+nnoremap <silent> <C-o> :noh<cr> " clear hlsearch
 
 " gitgutter
 nmap ]h <Plug>(GitGutterNextHunk)
@@ -103,13 +103,21 @@ nmap <silent> <leader>t <Plug>Translate
 " tagbar
 nmap <F8> :TagbarToggle<CR>
 
-" vim-tmux-navigator
-"let g:tmux_navigator_no_mappings = 1
-"nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
-"nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
-"nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
-"nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
-"nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
+" Tmux navigator
+nnoremap <silent><c-h>  :<c-u>call Tmux_navigate('h')<cr>
+nnoremap <silent><c-j>  :<c-u>call Tmux_navigate('j')<cr>
+nnoremap <silent><c-k>  :<c-u>call Tmux_navigate('k')<cr>
+nnoremap <silent><c-l>  :<c-u>call Tmux_navigate('l')<cr>
+
+function! Tmux_navigate(direction) abort
+  let oldwin = winnr()
+  execute 'wincmd' a:direction
+  if !empty($TMUX) && winnr() == oldwin
+    let sock = split($TMUX, ',')[0]
+    let direction = tr(a:direction, 'hjkl', 'LDUR')
+    silent execute printf('!tmux -S %s select-pane -%s', sock, direction)
+  endif
+endfunction
 
 " systemtap script ft
 autocmd BufRead,BufNewFile *.stp set filetype=stp

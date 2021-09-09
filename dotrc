@@ -6,7 +6,7 @@ alias ls="exa"
 alias ll="exa -l"
 alias la="exa -la"
 
-bind -x '"\C-l": clear'
+bind -x '"\C-o": clear'
 bind 'set completion-ignore-case on'
 
 export EDITOR=vim
