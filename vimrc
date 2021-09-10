@@ -90,7 +90,7 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
-nnoremap <silent> <C-o> :noh<cr> " clear hlsearch
+nnoremap <silent> <space>l :noh<cr> " clear hlsearch
 
 " gitgutter
 nmap ]h <Plug>(GitGutterNextHunk)
