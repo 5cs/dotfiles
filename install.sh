@@ -116,8 +116,10 @@ function __clangd() {
 
 
 function __git() {
+  ln -fs $DIR/git_prompt.sh ~/.git_prompt.sh
   ln -sf $DIR/gitignore_global $HOME/.gitignore_global
   git config --global core.excludesfile $HOME/.gitignore_global
+  git config --global color.ui auto
 }
 
 

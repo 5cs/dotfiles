@@ -1,3 +1,19 @@
+# If interactive, do nothing
+case $- in
+  *i*) ;;
+  *) return;;
+esac
+
+if [ -e ~/.git_prompt.sh ]; then
+  . ~/.git_prompt.sh
+  line='\[\033[1;34m\]'
+  green='\[\033[1;32m\]'
+  bred='\[\033[1;31m\]'
+  yellow='\[\033[1;33m\]'
+  white='\[\033[0;37m\]'
+  export PS1="${bred}\u@\h${line}${yellow}"'$(__git_ps1 " %s")'" ${line}${green}\w${line}\n${line}\$\[\033[00m\] "
+fi
+
 alias ..="cd .."
 alias ...="cd ../.."
 alias t="tmux a || tmux"
