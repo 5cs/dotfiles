@@ -94,7 +94,7 @@ nnoremap <silent> <space>l :noh<cr> " clear hlsearch
 
 " gitgutter
 nmap ]h <Plug>(GitGutterNextHunk)
-nmap [h <Plug>(GitGutterPrevHunk)]
+nmap [h <Plug>(GitGutterPrevHunk)
 "let g:gitgutter_git_executable = '/usr/bin/git'
 
 " vim-translator
