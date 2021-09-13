@@ -25,6 +25,7 @@ ruby
 tmux
 unzip
 wget
+words
 xclip
 xsel
 libevent-devel
