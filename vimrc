@@ -79,8 +79,24 @@ set colorcolumn=80
 set encoding=utf-8
 set signcolumn=yes
 set cursorline
+set list
 hi Normal guibg=NONE ctermbg=NONE
 let mapleader=","
+
+if has('multi_byte') && &encoding ==# 'utf-8'
+  let &listchars = 'tab:▸ ,extends:❯,precedes:❮,nbsp:±,trail:·'
+  let &fillchars = 'vert: ,diff: '  " ⣿
+  let &showbreak = '↪ '
+  highlight VertSplit ctermfg=242
+else
+  let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
+  let &fillchars = 'vert: ,stlnc:#'
+  let &showbreak = '-> '
+  augroup vimrc
+    autocmd InsertEnter * set listchars-=trail:.
+    autocmd InsertLeave * set listchars+=trail:.
+  augroup END
+endif
 
 " Jump to the last position when reopening a file
 autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
