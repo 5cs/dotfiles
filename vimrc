@@ -48,40 +48,44 @@ endif
 "Plug 'lifepillar/vim-gruvbox8'
 "Plug 'vim-airline/vim-airline'
 "Plug 'vim-airline/vim-airline-themes'
-"Plug 'ryanoasis/vim-devicons'
 "Plug 'ervandew/supertab'
-"Plug 'christoomey/vim-tmux-navigator'
-
 call plug#end()
 
-if has('termguicolors')
-  set termguicolors
-endif
-
-colorscheme gruvbox
-let g:lightline = {}
-let g:lightline.colorscheme = 'gruvbox'
-
-set relativenumber
+let mapleader=","
+set encoding=utf-8
 set hidden
-set nobackup
-set nowritebackup
+set tabstop=8
+set shiftwidth=2
+set softtabstop=2
+set autoindent
+set expandtab       " Expand TABs to spaces
 set cmdheight=1     " Give more space for displaying messages
 set updatetime=300  " Default 4000ms leads to noticeable delays
 set shortmess+=c    " Don't pass messages to |ins-completion-menu|
 set hlsearch
-set bg=dark
-set tabstop=8
-set shiftwidth=2
-set softtabstop=2
-set expandtab       " Expand TABs to spaces
+set relativenumber
 set colorcolumn=80
-set encoding=utf-8
 set signcolumn=yes
 set cursorline
 set list
-hi Normal guibg=NONE ctermbg=NONE
-let mapleader=","
+
+" backup/swap/info/undo settings
+set nobackup
+set nowritebackup
+set undofile
+set swapfile
+if has('nvim')
+  set backupdir  -=.
+  set shada       ='100
+else
+  let $v = $HOME . '/.vim'
+  set backupdir   =$v/files/backup
+  set directory   =$v/files/swap//
+  set undodir     =$v/files/undo
+  set viewdir     =$v/files/view
+  set viminfo     ='100,n$v/files/info/viminfo
+  autocmd VimEnter * silent !mkdir -p $v/files/{backup,swap,undo,view,info}
+endif
 
 if has('multi_byte') && &encoding ==# 'utf-8'
   let &listchars = 'tab:▸ ,extends:❯,precedes:❮,nbsp:±,trail:·'
@@ -97,6 +101,19 @@ else
     autocmd InsertLeave * set listchars+=trail:.
   augroup END
 endif
+
+syntax on
+filetype plugin indent on
+
+" color scheme
+colorscheme gruvbox
+set bg=dark
+if has('termguicolors')
+  set termguicolors
+endif
+let g:lightline = {}
+let g:lightline.colorscheme = 'gruvbox'
+hi Normal guibg=NONE ctermbg=NONE
 
 " Jump to the last position when reopening a file
 autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
