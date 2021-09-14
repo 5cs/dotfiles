@@ -30,6 +30,7 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'voldikss/vim-translator'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-repeat'
 Plug 'tweekmonster/startuptime.vim'
 Plug 'justinmk/vim-sneak'
 Plug 'airblade/vim-gitgutter'
@@ -93,9 +94,21 @@ nnoremap <C-l> <C-w>l
 nnoremap <silent> <space>l :noh<cr> " clear hlsearch
 
 " gitgutter
-nmap ]h <Plug>(GitGutterNextHunk)
-nmap [h <Plug>(GitGutterPrevHunk)
-"let g:gitgutter_git_executable = '/usr/bin/git'
+nmap <silent> ]h <Plug>(GitGutterNextHunk)
+    \ :call repeat#set("\<Plug>(GitGutterNextHunk)")<CR>
+nmap <silent> [h <Plug>(GitGutterPrevHunk)
+    \ :call repeat#set("\<Plug>(GitGutterPrevHunk)")<CR>
+nmap <silent> \h :call GitGutterNextHunkCycle()<CR>
+    \ :call repeat#set("\\h")<CR>
+
+function! GitGutterNextHunkCycle()
+  let line = line('.')
+  GitGutterNextHunk
+  if line('.') == line
+    1
+    GitGutterNextHunk
+  endif
+endfunction
 
 " vim-translator
 nmap <silent> <leader>t <Plug>Translate
@@ -161,7 +174,9 @@ else
 endif
 
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
+    \ :call repeat#set("\<Plug>(coc-diagnostic-prev)")<CR>
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
+    \ :call repeat#set("\<Plug>(coc-diagnostic-next)")<CR>
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
@@ -342,7 +357,7 @@ nnoremap <silent> <c-x><c-j> :<C-u>Marks<CR>
 autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '' | OSCYankReg " | endif
 vnoremap <leader>c :OSCYank<CR>
 nnoremap <silent> <leader>e :call GetFnLn()<CR>
-nnoremap <silent> <leader>w :echo expand("%:p") . '/' . expand("%:t") . ':' . line(".")<CR>
+nnoremap <silent> <leader>w :echo expand("%:p") . ':' . line(".")<CR>
 
 " Copy remote server vim fn:ln to local system's clipboard
 function! GetFnLn()
