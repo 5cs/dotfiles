@@ -4,7 +4,7 @@ if has('nvim')
         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
   endif
-  call plug#begin('~/.local/share/nvim/site/plugged/')
+  call plug#begin('~/.local/share/nvim/site/plugged')
 else
   if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs 
@@ -31,17 +31,16 @@ Plug 'voldikss/vim-translator'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-fugitive'
 Plug 'tweekmonster/startuptime.vim'
 Plug 'justinmk/vim-sneak'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/vim-easy-align'
-Plug 'junegunn/vim-github-dashboard'
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'andymass/vim-matchup'
 if has('nvim')
-  Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-  Plug 'andymass/vim-matchup'
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 else
-  Plug 'shougo/vimfiler.vim'
   Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 endif
 
@@ -67,7 +66,13 @@ set relativenumber
 set colorcolumn=80
 set signcolumn=yes
 set cursorline
+set laststatus=2
 set list
+set t_u7= " https://github.com/vim/vim/issues/390#issuecomment-531477332
+set t_RV= " https://stackoverflow.com/questions/21618614/vim-shows-garbage-characters
+if !has('gui_running')
+  set t_Co=256
+endif
 
 " backup/swap/info/undo settings
 set nobackup
@@ -301,43 +306,15 @@ nnoremap <silent><nowait> <space>p :<C-u>CocListResume<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " file manager
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if has('nvim')
-  nnoremap <leader>n :NERDTreeFocus<CR>
-  nnoremap <C-n> :NERDTree<CR>
-  nnoremap <C-t> :NERDTreeToggle<CR>
-  " nnoremap <C-f> :NERDTreeFine<CR>
-  " Start NERDTree and leave the cursor in it
-  autocmd VimEnter * NERDTree | wincmd p
-  " Exit Vim if NERDTree is the only window remaining in the only tab
-  autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 &&
-      \ exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-else
-  let g:vimfiler_as_default_explorer = 1
-  let g:vimfiler_safe_mode_by_default = 0
-  let g:vimfiler_tree_leaf_icon = " "
-  let g:vimfiler_tree_opened_icon = '~'
-  let g:vimfiler_tree_closed_icon = '+'
-  let g:vimfiler_file_icon = '-'
-  let g:vimfiler_marked_file_icon = '✓'
-  let g:vimfiler_readonly_file_icon = '✗'
-  let g:vimfiler_time_format = '%m-%d-%y %H:%M:%S'
-  let g:vimfiler_expand_jump_to_first_child = 0
-  let g:vimfiler_ignore_pattern = '^\.|\.git\|\.DS_Store\|\.pyc'
-
-  nnoremap <leader>d :<C-u>VimFilerExplorer -split -simple -parent
-      \ -winwidth=35 -toggle -no-quit<CR>
-  nnoremap <leader>jf :<C-u>VimFilerExplorer -split -simple -parent
-      \ -winwidth=35 -no-quit -find<CR>
-  autocmd FileType vimfiler nunmap <buffer> x
-  autocmd FileType vimfiler nmap <buffer> x <Plug>(vimfiler_toggle_mark_current_line)
-  autocmd FileType vimfiler vmap <buffer> x <Plug>(vimfiler_toggle_mark_selected_lines)
-  autocmd FileType vimfiler nunmap <buffer> l
-  autocmd FileType vimfiler nmap <buffer> l <Plug>(vimfiler_cd_or_edit)
-  autocmd FileType vimfiler nmap <buffer> h <Plug>(vimfiler_switch_to_parent_directory)
-  autocmd FileType vimfiler nmap <buffer> <C-R> <Plug>(vimfiler_redraw_screen)
-  autocmd FileType vimfiler nmap <silent><buffer><expr> <CR>
-      \ vimfiler#smart_cursor_map("\<Plug>(vimfiler_expand_tree)", "\<Plug>(vimfiler_edit_file)")
-endif
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+" nnoremap <C-f> :NERDTreeFine<CR>
+" Start NERDTree and leave the cursor in it
+autocmd VimEnter * NERDTree | wincmd p
+" Exit Vim if NERDTree is the only window remaining in the only tab
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 &&
+    \ exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
