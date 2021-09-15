@@ -143,7 +143,7 @@ function __vim() {
   sudo update-alternatives --install /usr/bin/vi vi /usr/local/bin/vim 1
   sudo update-alternatives --set vi /usr/local/bin/vim
   if [ ! -e ~/.vimrc ]; then ln -sf $DIR/vimrc ~/.vimrc; fi
-  vim -c "PlugInstall --sync" -c "PlugUpdate --sync" -c "qall"
+  yes | vim -c "PlugInstall --sync" -c "PlugUpdate --sync" -c "qall"
   # coc-vim
   ln -sf $DIR/coc-settings.json ~/.vim/coc-settings.json
   vim -c ":call coc#util#install()" -c "qall"
