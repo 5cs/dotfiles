@@ -1,17 +1,17 @@
+function! VimPlugGuard(plug, plugged)
+  if empty(glob(a:plug))
+    silent execute '!curl -fLo ' . shellescape(a:plug) . ' --create-dirs 
+          \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+  endif
+  call plug#begin(a:plugged)
+endfunction
+
 if has('nvim')
-  if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
-    silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
-        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-  endif
-  call plug#begin('~/.local/share/nvim/site/plugged')
+  call VimPlugGuard($HOME . '/.local/share/nvim/site/autoload/plug.vim',
+        \ $HOME . '/.local/share/nvim/site/plugged')
 else
-  if empty(glob('~/.vim/autoload/plug.vim'))
-    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs 
-        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-  endif
-  call plug#begin('~/.vim/plugged')
+  call VimPlugGuard($HOME . '/.vim/autoload/plug.vim', $HOME . '/.vim/plugged')
 endif
 
 Plug 'morhetz/gruvbox'
