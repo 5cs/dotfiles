@@ -89,7 +89,9 @@ else
   set undodir     =$v/files/undo
   set viewdir     =$v/files/view
   set viminfo     ='100,n$v/files/info/viminfo
-  autocmd VimEnter * silent !mkdir -p $v/files/{backup,swap,undo,view,info}
+  if empty(glob($v . '/files'))
+    silent !mkdir -p $v/files/{backup,swap,undo,view,info}
+  endif
 endif
 
 if has('multi_byte') && &encoding ==# 'utf-8'
