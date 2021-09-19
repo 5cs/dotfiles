@@ -1,19 +1,18 @@
-function! VimPlugGuard(plug, plugged)
-  if empty(glob(a:plug))
-    silent execute '!curl -fLo ' . shellescape(a:plug) . ' --create-dirs 
-          \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+function! s:plug_begin(fn, plugged)
+  if empty(glob(a:fn))
+    silent execute '!curl -fLo ' . shellescape(a:fn) . ' --create-dirs 
+      \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
   endif
   call plug#begin(a:plugged)
 endfunction
 
 if has('nvim')
-  call VimPlugGuard($HOME . '/.local/share/nvim/site/autoload/plug.vim',
-        \ $HOME . '/.local/share/nvim/site/plugged')
+  call s:plug_begin($HOME . '/.local/share/nvim/site/autoload/plug.vim',
+                  \ $HOME . '/.local/share/nvim/site/plugged')
 else
-  call VimPlugGuard($HOME . '/.vim/autoload/plug.vim', $HOME . '/.vim/plugged')
+  call s:plug_begin($HOME . '/.vim/autoload/plug.vim', $HOME . '/.vim/plugged')
 endif
-
 Plug 'morhetz/gruvbox'
 Plug 'itchyny/lightline.vim'
 Plug 'shinchu/lightline-gruvbox.vim'
@@ -43,11 +42,6 @@ if has('nvim')
 else
   Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 endif
-
-"Plug 'lifepillar/vim-gruvbox8'
-"Plug 'vim-airline/vim-airline'
-"Plug 'vim-airline/vim-airline-themes'
-"Plug 'ervandew/supertab'
 call plug#end()
 
 let mapleader=","
