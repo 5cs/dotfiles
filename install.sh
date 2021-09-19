@@ -79,6 +79,7 @@ function __rust_utilities() {
   local bat=$GITHUB/sharkdp/bat
   local exa=$GITHUB/ogham/exa
   if [ $GLIBC_VERSION -lt $GLIBC_VERSION_BASE ]; then
+    export PATH=~/.cargo/bin/:$PATH
     build_rs $rg rg
     build_rs $fd fd
     build_rs $bat.git bat
@@ -97,7 +98,8 @@ function __rust_utilities() {
 function __clangd() {
   if [ $GLIBC_VERSION -lt $GLIBC_VERSION_BASE ]; then
     # build from source
-    source scl_source enable devtoolset-8
+    sudo yum install -y devtoolset-8-gcc devtoolset-8-gcc-c++ && \
+      source scl_source enable devtoolset-8
     git clone --depth 1 $GITHUB/llvm/llvm-project.git $PKG/llvm-project
     cd $PKG/llvm-project && mkdir build && cd build
     cmake -G "Unix Makefiles" -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra" \
@@ -116,9 +118,9 @@ function __clangd() {
 
 
 function __git() {
-  ln -fs $DIR/git_prompt.sh ~/.git_prompt.sh
-  ln -sf $DIR/gitignore_global $HOME/.gitignore_global
-  git config --global core.excludesfile $HOME/.gitignore_global
+  ln -sf $DIR/bash/git_prompt.sh ~/.git_prompt.sh
+  ln -sf $DIR/gitignore_global ~/.gitignore_global
+  git config --global core.excludesfile ~/.gitignore_global
   git config --global color.ui auto
 }
 
@@ -142,10 +144,10 @@ function __vim() {
   sudo update-alternatives --set editor /usr/local/bin/vim
   sudo update-alternatives --install /usr/bin/vi vi /usr/local/bin/vim 1
   sudo update-alternatives --set vi /usr/local/bin/vim
-  if [ ! -e ~/.vimrc ]; then ln -sf $DIR/vimrc ~/.vimrc; fi
+  if [ ! -e ~/.vimrc ]; then ln -sf $DIR/vim/vimrc ~/.vimrc; fi
   yes | vim -c "PlugInstall --sync" -c "PlugUpdate --sync" -c "qall"
   # coc-vim
-  ln -sf $DIR/coc-settings.json ~/.vim/coc-settings.json
+  ln -sf $DIR/vim/coc-settings.json ~/.vim/coc-settings.json
   vim -c ":call coc#util#install()" -c "qall"
 }
 
@@ -157,11 +159,11 @@ function __nvim() {
     && make install || die "Build neovim failed."
   ln -sf $PKG/nvim/bin/nvim $BIN/nvim
   mkdir -p ~/.config/nvim/
-  ln -sf $DIR/nvimrc ~/.config/nvim/init.vim
-  if [ ! -e ~/.vimrc ]; then ln -sf $DIR/vimrc ~/.vimrc; fi
+  ln -sf $DIR/vim/neovim/init.vim ~/.config/nvim/init.vim
+  if [ ! -e ~/.vimrc ]; then ln -sf $DIR/vim/vimrc ~/.vimrc; fi
   nvim -c "PlugInstall --sync" -c "PlugUpdate --sync" -c "qall"
   # coc-nvim
-  ln -sf $DIR/coc-settings.json ~/.config/nvim/coc-settings.json
+  ln -sf $DIR/vim/coc-settings.json ~/.config/nvim/coc-settings.json
   nvim -c ":call coc#util#install()" -c "qall"
 }
 
@@ -171,15 +173,15 @@ function __tmux() {
   cd $PKG/tmux-$TMUX_VER && ./configure --prefix=$PKG/tmux && \
     make -j$CPU && make install || die "Build tmux failed."
   ln -sf $PKG/tmux/bin/tmux $BIN/tmux
-  ln -sf $DIR/tmux.conf ~/.tmux.conf
+  ln -sf $DIR/tmux/tmux.conf ~/.tmux.conf
   git clone --depth 1 $GITHUB/tmux-plugins/tpm ~/.tmux/plugins/tpm
   ~/.tmux/plugins/tpm/scripts/install_plugins.sh
 }
 
 
 function __bash() {
-  echo "export PATH=$BIN/:\$PATH" >> $DIR/shrc
-  echo "\n[ -f $DIR/shrc ] && source $DIR/shrc" >> ~/.bashrc
+  echo "export PATH=$BIN/:\$PATH" >> $DIR/bash/shrc
+  echo "\n[ -f $DIR/bash/shrc ] && source $DIR/bash/shrc" >> ~/.bashrc
 }
 
 

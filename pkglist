@@ -38,6 +38,4 @@ python3-devel
 ruby-devel
 tcl-devel
 centos-release-scl
-devtoolset-8-gcc
-devtoolset-8-gcc-c++
 yum-utils
