@@ -56,6 +56,7 @@ set cmdheight=1     " Give more space for displaying messages
 set updatetime=300  " Default 4000ms leads to noticeable delays
 set shortmess+=c    " Don't pass messages to |ins-completion-menu|
 set hlsearch
+set incsearch
 set relativenumber
 set colorcolumn=80
 set signcolumn=yes
@@ -120,12 +121,9 @@ hi Normal guibg=NONE ctermbg=NONE
 autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
     \ | exe "normal! g'\"" | endif
 
-" Window jump
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-h> <C-w>h
-nnoremap <C-l> <C-w>l
-nnoremap <silent> <space>l :noh<cr> " clear hlsearch
+" highlight
+nnoremap <silent> mm :let @/ = expand('<cword>')<CR>:set hls<CR>
+nnoremap <silent> mc :set nohls<CR>
 
 " gitgutter
 nmap <silent> ]h <Plug>(GitGutterNextHunk)
@@ -150,7 +148,7 @@ nmap <silent> <leader>t <Plug>Translate
 " tagbar
 nmap <F8> :TagbarToggle<CR>
 
-" Tmux navigator
+" Window & Tmux navigator
 nnoremap <silent><c-h>  :<c-u>call Tmux_navigate('h')<cr>
 nnoremap <silent><c-j>  :<c-u>call Tmux_navigate('j')<cr>
 nnoremap <silent><c-k>  :<c-u>call Tmux_navigate('k')<cr>
@@ -165,6 +163,13 @@ function! Tmux_navigate(direction) abort
     silent execute printf('!tmux -S %s select-pane -%s', sock, direction)
   endif
 endfunction
+
+" Window resize
+nnoremap <S-up>    5<C-w>+
+nnoremap <S-down>  5<C-w>-
+nnoremap <S-left>  5<C-w><
+nnoremap <S-right> 5<C-w>>
+" <C-w>= equal size
 
 " systemtap script ft
 autocmd BufRead,BufNewFile *.stp set filetype=stp
