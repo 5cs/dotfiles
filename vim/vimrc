@@ -266,18 +266,15 @@ command! -bang -nargs=* Rgs
     \   fzf#vim#with_preview(), <bang>0)
 
 nnoremap <silent> <leader>p  :<C-u>Files<CR>
-nnoremap <silent> <leader>gf :<C-u>GFiles<CR>
 nnoremap <silent> <leader>gs :<C-u>GFiles?<CR>
-nnoremap <silent> <leader>gc :<C-u>Commits<CR>
-nnoremap <silent> <leader>f  :<C-u>let cmd = 'Rg<Space><C-r>"' <bar> call histadd("cmd", cmd) <bar> execute cmd<CR>
-nnoremap <silent> <leader>F  :<C-u>let cmd = 'Rg!<Space><C-r>"' <bar> call histadd("cmd", cmd) <bar> execute cmd<CR>
+nnoremap <silent> <leader>b  :<C-u>Buffers<CR>
+nnoremap <silent>         S  :<C-u>let cmd = 'Rg <C-r><C-w>' <bar> call histadd("cmd", cmd) <bar> execute cmd<CR>
+nnoremap <silent> <leader>f  :<C-u>let cmd = 'Rg <C-r>"' <bar> call histadd("cmd", cmd) <bar> execute cmd<CR>
+nnoremap <silent> <leader>F  :<C-u>let cmd = 'Rg! <C-r>"' <bar> call histadd("cmd", cmd) <bar> execute cmd<CR>
 nnoremap          <leader>r  :<C-u>Rg<Space>
 nnoremap          <leader>R  :<C-u>Rg!<Space>
-nnoremap <silent> <leader>h  :<C-u>History:<CR>
+nnoremap <silent> <leader>c  :<C-u>History:<CR>
 nnoremap <silent> <leader>s  :<C-u>History/<CR>
-nnoremap <silent> <leader>b  :<C-u>Buffers<CR>
-nnoremap <silent> <leader>l  :<C-u>Lines<CR>
-nnoremap <silent> <c-x><c-f> :<C-u>BLines!<CR>
 nnoremap <silent> <c-x><c-j> :<C-u>Marks<CR>
 
 
@@ -285,7 +282,6 @@ nnoremap <silent> <c-x><c-j> :<C-u>Marks<CR>
 " vim-oscyank
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '' | OSCYankReg " | endif
-vnoremap <leader>c :OSCYank<CR>
 nnoremap <silent> <leader>e :call GetFnLn()<CR>
 nnoremap <silent> <leader>w :echo expand("%:p") . ':' . line(".")<CR>
 
