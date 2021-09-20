@@ -289,10 +289,10 @@ vnoremap <leader>c :OSCYank<CR>
 nnoremap <silent> <leader>e :call GetFnLn()<CR>
 nnoremap <silent> <leader>w :echo expand("%:p") . ':' . line(".")<CR>
 
-" Copy remote server vim fn:ln to local system's clipboard
+" Copy remote server vim fn:ln to local system's clipboard for gdb or sth else
 function! GetFnLn()
-  let fnln = expand("%:h") . '/' . expand("%:t") . ':' . line(".")
-  call setreg('z', fnln) " set fn:ln to reg z
-  OSCYankReg z           " yank fn:ln at reg z by OSC
-  call setreg('z', @_)   " clear reg z
+  let l:tempZ = @z
+  let @z = expand("%:h") . '/' . expand("%:t") . ':' . line(".")
+  OSCYankReg z
+  let @z = l:tempZ
 endfunction
