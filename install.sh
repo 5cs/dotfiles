@@ -181,7 +181,7 @@ function __tmux() {
 
 function __bash() {
   echo "export PATH=$BIN/:\$PATH" >> $DIR/bash/shrc
-  echo "\n[ -f $DIR/bash/shrc ] && source $DIR/bash/shrc" >> ~/.bashrc
+  echo "[ -f $DIR/bash/shrc ] && source $DIR/bash/shrc" >> ~/.bashrc
 }
 
 

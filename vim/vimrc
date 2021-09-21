@@ -265,12 +265,16 @@ command! -bang -nargs=* Rgs
     \   'rg --column --line-number --no-heading --color=always --smart-case --follow --sort-files -- '.shellescape(<q-args>), 1,
     \   fzf#vim#with_preview(), <bang>0)
 
+function! s:histexec(cmd)
+  call histadd('cmd', a:cmd) | execute a:cmd
+endfunction
+
 nnoremap <silent> <leader>p  :<C-u>Files<CR>
 nnoremap <silent> <leader>gs :<C-u>GFiles?<CR>
 nnoremap <silent> <leader>b  :<C-u>Buffers<CR>
-nnoremap <silent>         S  :<C-u>let cmd = 'Rg <C-r><C-w>' <bar> call histadd("cmd", cmd) <bar> execute cmd<CR>
-nnoremap <silent> <leader>f  :<C-u>let cmd = 'Rg <C-r>"' <bar> call histadd("cmd", cmd) <bar> execute cmd<CR>
-nnoremap <silent> <leader>F  :<C-u>let cmd = 'Rg! <C-r>"' <bar> call histadd("cmd", cmd) <bar> execute cmd<CR>
+nnoremap <silent>         S  :call <SID>histexec('Rg <C-r><C-w>')<CR>
+nnoremap <silent> <leader>f  :call <SID>histexec('Rg <C-r>"')<CR>
+nnoremap <silent> <leader>F  :call <SID>histexec('Rg! <C-r>"')<CR>
 nnoremap          <leader>r  :<C-u>Rg<Space>
 nnoremap          <leader>R  :<C-u>Rg!<Space>
 nnoremap <silent> <leader>c  :<C-u>History:<CR>
