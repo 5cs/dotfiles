@@ -57,7 +57,7 @@ set updatetime=300  " Default 4000ms leads to noticeable delays
 set shortmess+=c    " Don't pass messages to |ins-completion-menu|
 set hlsearch
 set incsearch
-set relativenumber
+set number relativenumber
 set colorcolumn=80
 set signcolumn=yes
 set cursorline
