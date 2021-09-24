@@ -229,6 +229,77 @@ nnoremap <nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<
 inoremap <nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
 inoremap <nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
 
+" diagnostic to quickfix list
+autocmd User CocDiagnosticChange silent call <SID>diagnostic_change()
+nnoremap <silent> <leader>qd :call <SID>diagnostic_as_qflist()<CR>
+let g:diag_qfid = -1
+
+function! s:diagnostic_change()
+  let l:info = getqflist({ 'id': g:diag_qfid, 'winid': 0, 'nr': 0 })
+  if l:info['winid'] != 0
+    let l:info['show'] = 0
+    call s:diagnostic_as_qflist(l:info)
+  endif
+endfunction
+
+function! s:diagnostic_as_qflist(...)
+  let l:args = a:0 == 0 ? {} : a:1
+  let l:diagnostics = CocAction('diagnosticList')
+  let l:items = []
+  for diag in l:diagnostics
+    let l:text = printf('[%s %s] %s', get(diag, 'source', 'coc.nvim'),
+      \ get(diag, 'code', ''), get(diag, 'message'))
+    let l:item = {
+      \ 'filename': diag['file'],
+      \ 'lnum': diag['lnum'],
+      \ 'col': diag['col'],
+      \ 'text': l:text,
+      \ 'type': diag['severity']
+      \ }
+    let l:items = add(l:items, l:item)
+  endfor
+
+  let l:id = -1
+  let l:winid = get(l:args, 'winid', 0)
+  let l:nr = get(l:args, 'nr', 0)
+  let l:show = get(l:args, 'show', 1)
+
+  if l:winid && l:nr
+    let l:id = g:diag_qfid
+  else
+    let l:info = getqflist({ 'id': g:diag_qfid, 'winid': 0, 'nr': 0 })
+    let l:id = l:info['id']
+    let l:winid = l:info['winid']
+    let l:nr = l:info['nr']
+  endif
+
+  let l:action = l:id == 0 ? ' ' : 'r'
+  call setqflist([], l:action, {
+    \ 'id': l:id,
+    \ 'title': 'CocDiagnosticList',
+    \ 'items': l:items
+    \ })
+
+  if l:id == 0
+    let l:info = getqflist({ 'id': l:id, 'nr': l:nr })
+    let g:diag_qfid = l:info['id']
+    let l:nr = l:info['nr']
+  endif
+
+  if l:show
+    if l:winid == 0
+      execute 'bo cope'
+    else
+      if has('nvim')
+        call nvim_set_current_win(l:winid)
+      else
+        execute l:winid . 'wincmd w'
+      endif
+    endif
+    execute 'sil ' . l:nr . 'chi'
+  endif
+endfunction
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " file manager
