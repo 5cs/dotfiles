@@ -39,6 +39,7 @@ Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'andymass/vim-matchup'
 if has('nvim')
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+  Plug 'kevinhwang91/nvim-bqf'
 else
   Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 endif
