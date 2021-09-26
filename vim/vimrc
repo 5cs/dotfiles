@@ -207,9 +207,9 @@ endif
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " navigation
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> [d <Plug>(coc-diagnostic-prev)
     \ :call repeat#set("\<Plug>(coc-diagnostic-prev)")<CR>
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+nmap <silent> ]d <Plug>(coc-diagnostic-next)
     \ :call repeat#set("\<Plug>(coc-diagnostic-next)")<CR>
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gr <Plug>(coc-references)
