@@ -1,3 +1,4 @@
+" Plug {{{1
 function! s:plug_begin(fn, plugged)
   if empty(glob(a:fn))
     silent execute '!curl -fLo ' . shellescape(a:fn) . ' --create-dirs 
@@ -21,7 +22,6 @@ Plug 'junegunn/fzf.vim'
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 Plug 'ojroques/vim-oscyank'
 Plug 'fatih/vim-go', { 'tag': '*' }
-Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
 Plug 'shougo/unite.vim'
 Plug 'majutsushi/tagbar'
 Plug 'jiangmiao/auto-pairs'
@@ -45,6 +45,7 @@ else
 endif
 call plug#end()
 
+" Option {{{1
 let mapleader=","
 set encoding=utf-8
 set hidden
@@ -76,17 +77,17 @@ set nowritebackup
 set undofile
 set swapfile
 if has('nvim')
-  set backupdir  -=.
-  set shada       ='100
+  set backupdir -=.
+  set shada      ='100
 else
-  let $v = $HOME . '/.vim'
-  set backupdir   =$v/files/backup
-  set directory   =$v/files/swap//
-  set undodir     =$v/files/undo
-  set viewdir     =$v/files/view
-  set viminfo     ='100,n$v/files/info/viminfo
-  if empty(glob($v . '/files'))
-    silent !mkdir -p $v/files/{backup,swap,undo,view,info}
+  let $v = $HOME . '/.vim/files'
+  set backupdir  =$v/backup
+  set directory  =$v/swap//
+  set undodir    =$v/undo
+  set viewdir    =$v/view
+  set viminfo    ='100,n$v/info/viminfo
+  if empty(glob($v))
+    silent !mkdir -p $v/{backup,swap,undo,view,info}
   endif
 endif
 
@@ -105,12 +106,17 @@ else
   augroup END
 endif
 
+" Init {{{1
 syntax on
 filetype plugin indent on
 
-" color scheme
+augroup vimrc
+  autocmd!
+augroup END
+
+" Color {{{1
 colorscheme gruvbox
-set bg=dark
+set background=dark
 if has('termguicolors')
   set termguicolors
 endif
@@ -118,44 +124,23 @@ let g:lightline = {}
 let g:lightline.colorscheme = 'gruvbox'
 hi Normal guibg=NONE ctermbg=NONE
 
-" Jump to the last position when reopening a file
-autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
-    \ | exe "normal! g'\"" | endif
+" Mapping {{{1
+nnoremap <silent>gm :let @/ = expand('<cword>')<CR>:set hls<CR>
+nnoremap <silent>gc :set nohls<CR>
 
-" highlight
-nnoremap <silent> mm :let @/ = expand('<cword>')<CR>:set hls<CR>
-nnoremap <silent> mc :set nohls<CR>
+" Window {{{2
+nnoremap <S-up>    2<C-w>+
+nnoremap <S-down>  2<C-w>-
+nnoremap <S-left>  2<C-w><
+nnoremap <S-right> 2<C-w>>
+" <C-w>= equal size
 
-" gitgutter
-nmap <silent> ]h <Plug>(GitGutterNextHunk)
-    \ :call repeat#set("\<Plug>(GitGutterNextHunk)")<CR>
-nmap <silent> [h <Plug>(GitGutterPrevHunk)
-    \ :call repeat#set("\<Plug>(GitGutterPrevHunk)")<CR>
-nmap <silent> \h :call GitGutterNextHunkCycle()<CR>
-    \ :call repeat#set("\\h")<CR>
+nnoremap <silent><C-h> :<C-u>call <SID>tmux_navigate('h')<CR>
+nnoremap <silent><C-j> :<C-u>call <SID>tmux_navigate('j')<CR>
+nnoremap <silent><C-k> :<C-u>call <SID>tmux_navigate('k')<CR>
+nnoremap <silent><C-l> :<C-u>call <SID>tmux_navigate('l')<CR>
 
-function! GitGutterNextHunkCycle()
-  let line = line('.')
-  GitGutterNextHunk
-  if line('.') == line
-    1
-    GitGutterNextHunk
-  endif
-endfunction
-
-" vim-translator
-nmap <silent> <leader>t <Plug>Translate
-
-" tagbar
-nmap <F8> :TagbarToggle<CR>
-
-" Window & Tmux navigator
-nnoremap <silent><c-h>  :<c-u>call Tmux_navigate('h')<cr>
-nnoremap <silent><c-j>  :<c-u>call Tmux_navigate('j')<cr>
-nnoremap <silent><c-k>  :<c-u>call Tmux_navigate('k')<cr>
-nnoremap <silent><c-l>  :<c-u>call Tmux_navigate('l')<cr>
-
-function! Tmux_navigate(direction) abort
+function! s:tmux_navigate(direction) abort
   let oldwin = winnr()
   execute 'wincmd' a:direction
   if !empty($TMUX) && winnr() == oldwin
@@ -165,14 +150,6 @@ function! Tmux_navigate(direction) abort
   endif
 endfunction
 
-" Window resize
-nnoremap <S-up>    5<C-w>+
-nnoremap <S-down>  5<C-w>-
-nnoremap <S-left>  5<C-w><
-nnoremap <S-right> 5<C-w>>
-" <C-w>= equal size
-
-" Tab
 nnoremap <silent> <C-left>  :tabp<CR>
 nnoremap <silent> <C-right> :tabn<CR>
 nnoremap <silent> <F2>      :Tabe<CR>
@@ -188,62 +165,48 @@ function! Tabe(...)
   endif
 endfunction
 
-" Hex
+" Editting {{{2
 nnoremap <silent> <F5> :Hexe<CR>
 nnoremap <silent> <F6> :Hexw<CR>
-command! -nargs=* -complete=file Hexe call Hexe(<f-args>)
-command! -nargs=0 Hexw execute '%!xxd -r' | set binary | set filetype= | w
-
-function! Hexe(...)
-  if a:0 != 0
-    for fn in a:000
-      execute printf('tabe %s', fn)
-      execute '%!xxd' | set filetype=xxd
-    endfor
-  else
-    execute '%!xxd' | set filetype=xxd
-  endif
-endfunction
-
-" Hex
-nnoremap <silent> <F5> :Hexe<CR>
-nnoremap <silent> <F6> :Hexw<CR>
-command! -nargs=* -complete=file Hexe call Hexe(<f-args>)
-command! -nargs=0 Hexw execute '%!xxd -r' | set binary | set filetype= | w
-
-function! Hexe(...)
-  if a:0 != 0
-    for fn in a:000
-      execute printf('tabe %s', fn)
-      execute '%!xxd' | set filetype=xxd
-    endfor
-  else
-    execute '%!xxd' | set filetype=xxd
-  endif
-endfunction
-
-augroup Binary
-  au!
-  au BufReadPre  *.bin let &bin=1
-  au BufReadPost *.bin if &bin | %!xxd
-  au BufReadPost *.bin set ft=xxd | endif
-  au BufWritePre *.bin if &bin | %!xxd -r
-  au BufWritePre *.bin endif
-  au BufWritePost *.bin if &bin | %!xxd
-  au BufWritePost *.bin set nomod | endif
+augroup vimrc
+  command! -nargs=* -complete=file Hexe call Hexe(<f-args>)
+  command! -nargs=0 Hexw execute '%!xxd -r' | set binary | set filetype= | w
 augroup END
 
-" systemtap script ft
-autocmd BufRead,BufNewFile *.stp set filetype=stp
+function! Hexe(...)
+  if a:0 != 0
+    for fn in a:000
+      execute printf('tabe %s', fn)
+      execute '%!xxd' | set filetype=xxd
+    endfor
+  else
+    execute '%!xxd' | set filetype=xxd
+  endif
+endfunction
 
-" vim-commentary
-autocmd FileType c,cpp,cs,java setlocal commentstring=//\ %s
-noremap <leader>/ :Commentary<CR>
+augroup vimrc
+  autocmd BufReadPre   *.bin let &bin=1
+  autocmd BufReadPost  *.bin if &bin | %!xxd
+  autocmd BufReadPost  *.bin set ft=xxd | endif
+  autocmd BufWritePre  *.bin if &bin | %!xxd -r
+  autocmd BufWritePre  *.bin endif
+  autocmd BufWritePost *.bin if &bin | %!xxd
+  autocmd BufWritePost *.bin set nomod | endif
+augroup END
 
+" Autocmd {{{1
+augroup vimrc
+  autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+        \ | exe "normal! g'\"" | endif
+augroup END
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" coc.nvim
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Filetype {{{1
+augroup vimrc
+  autocmd BufRead,BufNewFile *.stp set filetype=stp
+augroup END
+
+" Plugin {{{1
+" Plugin: coc.nvim {{{2
 " autocomplete
 inoremap <silent><expr> <TAB>
     \ pumvisible() ? "\<C-n>" :
@@ -256,12 +219,10 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-" use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
 if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+  inoremap <expr> <CR> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 else
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+  inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endif
 
 " highlight uses on hover
@@ -274,7 +235,7 @@ nmap <silent> ]d <Plug>(coc-diagnostic-next)
     \ :call repeat#set("\<Plug>(coc-diagnostic-next)")<CR>
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gr <Plug>(coc-references)
-nmap <leader>rn <Plug>(coc-rename)
+nmap <leader>rn  <Plug>(coc-rename)
 
 " show docs
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -288,10 +249,10 @@ endfunction
 " scroll popup
 nnoremap <nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
 nnoremap <nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-inoremap <nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-inoremap <nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+inoremap <nowait><expr> <C-f> coc#float#has_scroll() ? "\<C-r>=coc#float#scroll(1)\<CR>" : "\<Right>"
+inoremap <nowait><expr> <C-b> coc#float#has_scroll() ? "\<C-r>=coc#float#scroll(0)\<CR>" : "\<Left>"
 
-" diagnostic to quickfix list
+" diagnostics to quickfix list
 autocmd User CocDiagnosticChange silent call <SID>diagnostic_change()
 nnoremap <silent> <leader>qd :call <SID>diagnostic_as_qflist()<CR>
 let g:diag_qfid = -1
@@ -362,40 +323,18 @@ function! s:diagnostic_as_qflist(...)
   endif
 endfunction
 
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" file manager
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <leader>n :NERDTreeFocus<CR>
-nnoremap <C-n> :NERDTree<CR>
-nnoremap <C-t> :NERDTreeToggle<CR>
-" nnoremap <C-f> :NERDTreeFine<CR>
-" Start NERDTree and leave the cursor in it
-autocmd VimEnter * NERDTree | wincmd p
-" Exit Vim if NERDTree is the only window remaining in the only tab
-autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 &&
-    \ exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" fzf.vim
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin: fzf {{{2
 let $FZF_DEFAULT_OPTS="--bind \"ctrl-n:preview-down,ctrl-p:preview-up\" --layout=reverse"
 let $BAT_THEME='1337'
-" completion
-imap <c-x><c-l> <plug>(fzf-complete-line)
-inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files')
-inoremap <expr> <c-x><c-k> fzf#vim#complete('cat /usr/share/dict/words')
-inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'window': { 'width': 0.2, 'height': 0.9, 'xoffset': 1 }})
+
+imap <C-x><C-l> <Plug>(fzf-complete-line)
+inoremap <expr> <C-x><C-f> fzf#vim#complete#path('rg --files')
+inoremap <expr> <C-x><C-k> fzf#vim#complete('cat /usr/share/dict/words')
+inoremap <expr> <C-x><C-k> fzf#vim#complete#word({'window': { 'width': 0.2, 'height': 0.9, 'xoffset': 1 }})
 
 command! -bang -nargs=* Rg
     \ call fzf#vim#grep(
     \   'rg --column --line-number --no-heading --color=always --smart-case --follow -- '.shellescape(<q-args>), 1,
-    \   fzf#vim#with_preview(), <bang>0)
-
-command! -bang -nargs=* Rgs
-    \ call fzf#vim#grep(
-    \   'rg --column --line-number --no-heading --color=always --smart-case --follow --sort-files -- '.shellescape(<q-args>), 1,
     \   fzf#vim#with_preview(), <bang>0)
 
 function! s:histexec(cmd)
@@ -412,20 +351,53 @@ nnoremap          <leader>r  :<C-u>Rg<Space>
 nnoremap          <leader>R  :<C-u>Rg!<Space>
 nnoremap <silent> <leader>c  :<C-u>History:<CR>
 nnoremap <silent> <leader>s  :<C-u>History/<CR>
-nnoremap <silent> <c-x><c-j> :<C-u>Marks<CR>
+nnoremap <silent> <C-x><C-j> :<C-u>Marks<CR>
 
+" Plugin: nerdtree {{{2
+nnoremap <leader>n :NERDTreeToggle<CR>
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" vim-oscyank
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+augroup vimrc
+  autocmd VimEnter * NERDTree | wincmd p
+  autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 &&
+        \ exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+augroup END
+
+" Plugin: vim-oscyank {{{2
 autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '' | OSCYankReg " | endif
-nnoremap <silent> <leader>e :call GetFnLn()<CR>
+nnoremap <silent> <leader>e :call <SID>get_fnln()<CR>
 nnoremap <silent> <leader>w :echo expand("%:p") . ':' . line(".")<CR>
 
-" Copy remote server vim fn:ln to local system's clipboard for gdb or sth else
-function! GetFnLn()
+" copy remote server vim fn:ln to local system's clipboard for gdb or sth else
+function! s:get_fnln()
   let l:tempZ = @z
   let @z = expand("%:h") . '/' . expand("%:t") . ':' . line(".")
   OSCYankReg z
   let @z = l:tempZ
 endfunction
+
+" Plugin: vim-gitgutter {{{2
+nmap <silent> ]h <Plug>(GitGutterNextHunk)
+    \ :call repeat#set("\<Plug>(GitGutterNextHunk)")<CR>
+nmap <silent> [h <Plug>(GitGutterPrevHunk)
+    \ :call repeat#set("\<Plug>(GitGutterPrevHunk)")<CR>
+nmap <silent> \h :call GitGutterNextHunkCycle()<CR>
+    \ :call repeat#set("\\h")<CR>
+
+function! GitGutterNextHunkCycle()
+  let line = line('.')
+  GitGutterNextHunk
+  if line('.') == line
+    1
+    GitGutterNextHunk
+  endif
+endfunction
+
+" Plugin: vim-translator {{{2
+nmap <silent> <leader>t <Plug>Translate
+
+" Plugin: tagbar {{{2
+nmap <F8> :TagbarToggle<CR>
+
+" Plugin: vim-commentary {{{2
+autocmd FileType c,cpp,cs,java setlocal commentstring=//\ %s
+noremap <leader>/ :Commentary<CR>
