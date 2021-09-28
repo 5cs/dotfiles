@@ -406,7 +406,15 @@ endfunction
 nmap <silent> <leader>t <Plug>Translate
 
 " Plugin: tagbar {{{2
+set tags=tags,tags;
 nmap <F8> :TagbarToggle<CR>
+let g:tagbar_type_vim = {
+  \   'ctagstype' : 'vim',
+  \   'kinds' : [
+  \     's:settings',
+  \     'f:functions',
+  \   ]
+  \ }
 
 " Plugin: vim-commentary {{{2
 autocmd FileType c,cpp,cs,java setlocal commentstring=//\ %s

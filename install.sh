@@ -184,6 +184,10 @@ function __bash() {
   echo "[ -f $DIR/bash/shrc ] && source $DIR/bash/shrc" >> ~/.bashrc
 }
 
+function __ctags() {
+  ln -sf $DIR/ctags ~/.ctags
+}
+
 
 main() {
   __gfw
@@ -195,6 +199,7 @@ main() {
   __nvim
   __tmux
   __bash
+  __ctags
 }
 
 main
