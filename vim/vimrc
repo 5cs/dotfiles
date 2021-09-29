@@ -126,12 +126,16 @@ hi Normal guibg=NONE ctermbg=NONE
 " Mapping {{{1
 let mapleader=","
 nnoremap Y m'^yg_``
-nnoremap V ^vg_
 nnoremap T <C-w>gf
 nnoremap <silent>gm :let @/ = expand('<cword>')<CR>:set hls<CR>
 nnoremap <silent>gc :set nohls<CR>
 nnoremap <leader>ev :Tabe ~/.vimrc<CR>
 nnoremap <leader>sv :source $MYVIMRC<CR>
+" move text
+vnoremap < <gv
+vnoremap > >gv
+vnoremap <silent> <C-j> :m '>+1<CR>gv
+vnoremap <silent> <C-k> :m '<-2<CR>gv
 
 " Window {{{2
 nnoremap <S-up>    2<C-w>+
