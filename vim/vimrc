@@ -46,7 +46,6 @@ endif
 call plug#end()
 
 " Option {{{1
-let mapleader=","
 set encoding=utf-8
 set hidden
 set tabstop=8
@@ -125,6 +124,7 @@ let g:lightline.colorscheme = 'gruvbox'
 hi Normal guibg=NONE ctermbg=NONE
 
 " Mapping {{{1
+let mapleader=","
 nnoremap Y m'^yg_``
 nnoremap V ^vg_
 nnoremap T <C-w>gf
@@ -406,8 +406,11 @@ endfunction
 nmap <silent> <leader>t <Plug>Translate
 
 " Plugin: tagbar {{{2
-set tags=tags,tags;
 nmap <F8> :TagbarToggle<CR>
+
+set tags=tags,tags;
+let g:tagbar_sort = 0
+let g:tagbar_compact=1
 let g:tagbar_type_vim = {
   \   'ctagstype' : 'vim',
   \   'kinds' : [
