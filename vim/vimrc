@@ -182,10 +182,9 @@ endfunction
 " Editting {{{2
 nnoremap <silent> <F5> :Hexe<CR>
 nnoremap <silent> <F6> :Hexw<CR>
-augroup vimrc
-  command! -nargs=* -complete=file Hexe call Hexe(<f-args>)
-  command! -nargs=0 Hexw execute '%!xxd -r' | set binary | set filetype= | w
-augroup END
+
+command! -nargs=* -complete=file Hexe call Hexe(<f-args>)
+command! -nargs=0 Hexw execute '%!xxd -r' | set binary | set filetype= | w
 
 function! Hexe(...)
   if a:0 != 0
