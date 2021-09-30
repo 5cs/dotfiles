@@ -125,17 +125,35 @@ hi Normal guibg=NONE ctermbg=NONE
 
 " Mapping {{{1
 let mapleader=","
-nnoremap Y m'^yg_``
+nnoremap Y y$
+nnoremap n nzzzv
+nnoremap N Nzzzv
 nnoremap T <C-w>gf
+nnoremap <expr> k (v:count > 5 ? "m'" . v:count : "") . 'k'
+nnoremap <expr> j (v:count > 5 ? "m'" . v:count : "") . 'j'
 nnoremap <silent>gm :let @/ = expand('<cword>')<CR>:set hls<CR>
 nnoremap <silent>gc :set nohls<CR>
 nnoremap <leader>ev :Tabe ~/.vimrc<CR>
 nnoremap <leader>sv :source $MYVIMRC<CR>
+inoremap <silent> <C-a> <home>
+inoremap <silent> <C-e> <end>
+inoremap <silent> <C-h> <left>
+inoremap <silent> <C-l> <right>
+inoremap <silent> <C-k> <up>
+inoremap <silent> <C-j> <down>
+inoremap <silent> <C-o> <end><CR>
+inoremap <silent> <C-d> <ESC>ddi
+cnoremap <C-a> <home>
+cnoremap <C-e> <end>
+cnoremap <C-h> <left>
+cnoremap <C-l> <right>
+cnoremap <C-p> <up>
+cnoremap <C-n> <down>
 " move text
 vnoremap < <gv
 vnoremap > >gv
-vnoremap <silent> <C-j> :m '>+1<CR>gv
-vnoremap <silent> <C-k> :m '<-2<CR>gv
+vnoremap <silent> <C-j> :m '>+1<CR>gv=gv
+vnoremap <silent> <C-k> :m '<-2<CR>gv=gv
 
 " Window {{{2
 nnoremap <S-up>    2<C-w>+
