@@ -433,6 +433,11 @@ function! GitGutterNextHunkCycle()
   endif
 endfunction
 
+nmap <silent> <leader>hs <Plug>(GitGutterStageHunk)
+    \ :call repeat#set("\<Plug>(GitGutterStageHunk)")<CR>
+nmap <silent> <leader>hp <Plug>(GitGutterPreviewHunk)
+    \ :call repeat#set("\<Plug>(GitGutterPreviewHunk)")<CR>
+
 " Plugin: vim-translator {{{2
 nmap <silent> <leader>t <Plug>Translate
 
@@ -453,3 +458,7 @@ let g:tagbar_type_vim = {
 " Plugin: vim-commentary {{{2
 autocmd FileType c,cpp,cs,java setlocal commentstring=//\ %s
 noremap <leader>/ :Commentary<CR>
+
+" Plugin: vim-easy-align {{{2
+xmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
