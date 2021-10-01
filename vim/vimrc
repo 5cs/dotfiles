@@ -38,6 +38,8 @@ Plug 'junegunn/vim-easy-align'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'andymass/vim-matchup'
 Plug 'michaeljsmith/vim-indent-object'
+Plug 'wellle/targets.vim'
+Plug 'mbbill/undotree'
 if has('nvim')
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
   Plug 'kevinhwang91/nvim-bqf'
@@ -130,8 +132,10 @@ nnoremap Y y$
 nnoremap n nzzzv
 nnoremap N Nzzzv
 nnoremap T <C-w>gf
-nnoremap <expr> k (v:count > 5 ? "m'" . v:count : "") . 'k'
-nnoremap <expr> j (v:count > 5 ? "m'" . v:count : "") . 'j'
+nnoremap U     :execute 'ea ' . v:count1 . 'f'<CR>
+nnoremap <M-r> :execute 'lat ' . v:count1 . 'f'<CR>
+nnoremap <expr> k (v:count > 5 ? 'm`' . v:count : '') . 'k'
+nnoremap <expr> j (v:count > 5 ? 'm`' . v:count : '') . 'j'
 nnoremap <silent>gm :let @/ = expand('<cword>')<CR>:set hls<CR>
 nnoremap <silent>gc :set nohls<CR>
 nnoremap <leader>ev :Tabe ~/.vimrc<CR>
@@ -511,3 +515,10 @@ noremap <leader>/ :Commentary<CR>
 " Plugin: vim-easy-align {{{2
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
+
+" Plugin: undotree {{{2
+nnoremap <F9> :UndotreeToggle<CR>
+
+let g:undotree_WindowLayout = 3
+let g:undotree_SplitWidth = 45
+let g:undotree_SetFocusWhenToggle = 1
