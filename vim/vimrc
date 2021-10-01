@@ -37,6 +37,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/vim-easy-align'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'andymass/vim-matchup'
+Plug 'michaeljsmith/vim-indent-object'
 if has('nvim')
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
   Plug 'kevinhwang91/nvim-bqf'
@@ -154,6 +155,15 @@ vnoremap < <gv
 vnoremap > >gv
 vnoremap <silent> <C-j> :m '>+1<CR>gv=gv
 vnoremap <silent> <C-k> :m '<-2<CR>gv=gv
+" text object
+vnoremap <silent> ib GoggV
+onoremap <silent> ib :normal vib<CR>
+vnoremap <silent> il g_o^
+onoremap <silent> il :normal vil<CR>
+vnoremap <silent> ia :<C-u>call argtextobj#v(1)<CR>
+vnoremap <silent> aa :<C-u>call argtextobj#v(0)<CR>
+onoremap <silent> ia :<C-u>call argtextobj#o(1)<CR>
+onoremap <silent> aa :<C-u>call argtextobj#o(0)<CR>
 
 " Window {{{2
 nnoremap <S-up>    2<C-w>+

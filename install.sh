@@ -149,6 +149,8 @@ function __vim() {
   # coc-vim
   ln -sf $DIR/vim/coc-settings.json ~/.vim/coc-settings.json
   vim -c ":call coc#util#install()" -c "qall"
+  # argtextobj
+  ln -sf $DIR/vim/autoload/argtextobj.vim ~/.vim/autoload/argtextobj.vim
 }
 
 
@@ -165,6 +167,9 @@ function __nvim() {
   # coc-nvim
   ln -sf $DIR/vim/coc-settings.json ~/.config/nvim/coc-settings.json
   nvim -c ":call coc#util#install()" -c "qall"
+  # argtextobj
+  ln -sf $DIR/vim/autoload/argtextobj.vim \
+    ~/.local/share/nvim/site/autoload/argtextobj.vim
 }
 
 
