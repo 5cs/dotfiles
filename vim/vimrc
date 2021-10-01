@@ -235,6 +235,55 @@ augroup vimrc
   autocmd BufWritePost *.bin set nomod | endif
 augroup END
 
+" Navigation {{{2
+nnoremap <silent> <leader>qj :call <SID>jumps_as_qflist()<CR>
+
+function! s:jumps_as_qflist()
+  let l:jl    = getjumplist()
+  let l:locs  = get(l:jl, 0)
+  let l:pos   = get(l:jl, 1)
+  let l:items = []
+  let l:idx   = 1
+  let l:i     = len(l:locs) - 1
+
+  while l:i >= 0
+    let l:loc   = get(l:locs, l:i)
+    let l:bufnr = get(l:loc, 'bufnr')
+    let l:lnum  = get(l:loc, 'lnum')
+    let l:col   = get(l:loc, 'col') + 1
+    if bufexists(l:bufnr) && bufname(l:bufnr) !~ 'NERD_tree_'
+      let l:text  = get(getbufline(l:bufnr, l:lnum), 0, '......')
+      let l:items = add(l:items, {
+        \ 'bufnr': l:bufnr,
+        \ 'lnum': l:lnum,
+        \ 'col': l:col,
+        \ 'text': l:text
+        \ })
+    endif
+    if pos + 1 == l:i
+      let l:idx = len(l:items)
+    endif
+    let l:i -= 1
+  endwhile
+
+  call setloclist(0, [], ' ', {
+    \ 'title': 'JumpList',
+    \ 'items': l:items,
+    \ 'idx': l:idx
+    \ })
+
+  let l:winid = getloclist(0, {'winid': 0}).winid
+  if l:winid == 0
+    execute 'abo lw'
+  else
+    if has('nvim')
+      call nvim_set_current_win(l:winid)
+    else
+      execute l:winid . 'wincmd w'
+    endif
+  endif
+endfunction
+
 " Autocmd {{{1
 augroup vimrc
   autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
@@ -307,9 +356,9 @@ function! s:diagnostic_change()
 endfunction
 
 function! s:diagnostic_as_qflist(...)
-  let l:args = a:0 == 0 ? {} : a:1
+  let l:args        = a:0 == 0 ? {} : a:1
   let l:diagnostics = CocAction('diagnosticList')
-  let l:items = []
+  let l:items       = []
   for diag in l:diagnostics
     let l:text = printf('[%s %s] %s', get(diag, 'source', 'coc.nvim'),
       \ get(diag, 'code', ''), get(diag, 'message'))
@@ -323,18 +372,18 @@ function! s:diagnostic_as_qflist(...)
     let l:items = add(l:items, l:item)
   endfor
 
-  let l:id = -1
+  let l:id    = -1
   let l:winid = get(l:args, 'winid', 0)
-  let l:nr = get(l:args, 'nr', 0)
-  let l:show = get(l:args, 'show', 1)
+  let l:nr    = get(l:args, 'nr', 0)
+  let l:show  = get(l:args, 'show', 1)
 
   if l:winid && l:nr
-    let l:id = g:diag_qfid
+    let l:id    = g:diag_qfid
   else
-    let l:info = getqflist({ 'id': g:diag_qfid, 'winid': 0, 'nr': 0 })
-    let l:id = l:info['id']
+    let l:info  = getqflist({ 'id': g:diag_qfid, 'winid': 0, 'nr': 0 })
+    let l:id    = l:info['id']
     let l:winid = l:info['winid']
-    let l:nr = l:info['nr']
+    let l:nr    = l:info['nr']
   endif
 
   let l:action = l:id == 0 ? ' ' : 'r'
@@ -345,9 +394,9 @@ function! s:diagnostic_as_qflist(...)
     \ })
 
   if l:id == 0
-    let l:info = getqflist({ 'id': l:id, 'nr': l:nr })
+    let l:info      = getqflist({ 'id': l:id, 'nr': l:nr })
     let g:diag_qfid = l:info['id']
-    let l:nr = l:info['nr']
+    let l:nr        = l:info['nr']
   endif
 
   if l:show
