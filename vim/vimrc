@@ -290,6 +290,56 @@ function! s:jumps_as_qflist()
   endif
 endfunction
 
+set qftf=QuickFixTextFunc
+function! QuickFixTextFunc(info) abort
+  let l:ret   = []
+  let l:items = []
+  if a:info.quickfix
+    let l:items = getqflist({'id': a:info.id, 'items': 0}).items
+  else
+    let l:items = getloclist(a:info.winid, {'id': a:info.id, 'items': 0}).items
+  endif
+
+  let l:limit      = 31
+  let l:fname_fmt1 = '%-' . (l:limit+1) . 's'
+  let l:fname_fmt2 = '…%.' . l:limit . 's'
+  let l:text_fmt   = '%s |%5d:%-3d|%s %s'
+
+  for idx in range(a:info.start_idx - 1, a:info.end_idx - 1)
+    let l:e     = l:items[idx]
+    let l:fname = ''
+    let l:str   = ''
+    if !l:e.valid
+      let l:str = l:e.text
+    else
+      if l:e.bufnr > 0
+        let l:fname = bufname(l:e.bufnr)
+        if l:fname == ''
+          let l:fname = '[No Name]'
+        else
+          let l:fname = substitute(l:fname, $HOME, '~', '&')
+        endif
+
+        let l:fname_len = strchars(l:fname)
+        if l:fname_len <= l:limit
+          let l:fname = printf(l:fname_fmt1, l:fname)
+        else
+          let l:fname = printf(l:fname_fmt2,
+                \ strcharpart(l:fname, l:fname_len-l:limit, 999))
+        endif
+
+        let l:lnum  = l:e.lnum > 99999 ? -1 : l:e.lnum
+        let l:col   = l:e.col > 999 ? -1 : l:e.col
+        let l:type  = l:e.type == '' ? '' : ' ' . toupper(strcharpart(l:e.type, 0, 1))
+        let l:str   = printf(l:text_fmt, l:fname, l:lnum, l:col, l:type, l:e.text)
+      end
+    endif
+    let l:ret = add(l:ret, l:str)
+  endfor
+
+  return ret
+endfunction
+
 " Autocmd {{{1
 augroup vimrc
   autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
