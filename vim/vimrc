@@ -194,12 +194,18 @@ function! s:tmux_navigate(direction) abort
   endif
 endfunction
 
-nnoremap <silent> <C-left>  :tabp<CR>
-nnoremap <silent> <C-right> :tabn<CR>
+nnoremap <silent> <M-left>  :tabp<CR>
+nnoremap <silent> <M-right> :tabn<CR>
 nnoremap <silent> <F2>      :Tabe<CR>
-inoremap <silent> <C-left>  <ESC>:tabp<CR>
-inoremap <silent> <C-right> <ESC>:tabn<CR>
+inoremap <silent> <M-left>  <ESC>:tabp<CR>
+inoremap <silent> <M-right> <ESC>:tabn<CR>
 inoremap <silent> <F2>      <ESC>:Tabe<CR>
+if has('nvim')
+  map <F3> <Esc>:tabe\|term<CR>
+  tnoremap <M-\> <C-\><C-n>
+else
+  map <F3> <Esc>:shell<CR>
+endif
 
 command! -nargs=* -complete=file Tabe call Tabe(<f-args>)
 
