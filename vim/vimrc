@@ -136,8 +136,7 @@ nnoremap U     :execute 'ea ' . v:count1 . 'f'<CR>
 nnoremap <M-r> :execute 'lat ' . v:count1 . 'f'<CR>
 nnoremap <expr> k (v:count > 5 ? 'm`' . v:count : '') . 'k'
 nnoremap <expr> j (v:count > 5 ? 'm`' . v:count : '') . 'j'
-nnoremap <silent>gm :let @/ = expand('<cword>')<CR>:set hls<CR>
-nnoremap <silent>gc :set nohls<CR>
+nnoremap <silent>g/ :let @/ = expand('<cword>')<CR>:set hls!<CR>
 nnoremap <leader>ev :Tabe ~/.vimrc<CR>
 nnoremap <leader>sv :source $MYVIMRC<CR>
 inoremap <silent> <C-a> <home>
@@ -168,6 +167,9 @@ vnoremap <silent> ia :<C-u>call argtextobj#v(1)<CR>
 vnoremap <silent> aa :<C-u>call argtextobj#v(0)<CR>
 onoremap <silent> ia :<C-u>call argtextobj#o(1)<CR>
 onoremap <silent> aa :<C-u>call argtextobj#o(0)<CR>
+
+map zl zL
+map zh zH
 
 " Window {{{2
 nnoremap <S-up>    2<C-w>+
@@ -491,6 +493,40 @@ nmap <silent> <leader>hs <Plug>(GitGutterStageHunk)
 nmap <silent> <leader>hp <Plug>(GitGutterPreviewHunk)
     \ :call repeat#set("\<Plug>(GitGutterPreviewHunk)")<CR>
 
+" Plugin: vim-fugitive {{{2
+nnoremap <leader>gg :call GitIndex()<CR>
+nnoremap <leader>gb :exe 'Git blame -w <bar> winc p'<CR>
+nnoremap <leader>gc :Git commit<space>
+nnoremap <leader>gC :Git commit --amend<space>
+nnoremap <leader>gd :Git difftool -y<space>
+nnoremap <leader>gh :Gvdiffsplit HEAD~
+nnoremap <leader>ge :Gedit<CR>
+
+function! GitIndex()
+  let l:bufname = bufname('%')
+  if winnr('$') == 1 && bufname == ''
+    execute 'Git'
+  else
+    execute 'tab Git'
+  endif
+  if bufname == ''
+    execute 'sil! noa bw #'
+  endif
+endfunction
+
+augroup vimrc
+  autocmd User FugitiveIndex nmap <buffer> <C-n> ]c
+  autocmd User FugitiveIndex nmap <buffer> <C-p> [c
+  autocmd User FugitiveIndex nmap <buffer> <C-s> s
+  autocmd User FugitiveIndex nmap <buffer> <C-u> u
+  autocmd User FugitiveIndex nmap <buffer>     a -
+  autocmd User FugitiveIndex nmap <buffer>    ]f ]/
+  autocmd User FugitiveIndex nmap <buffer>    [f [/
+  autocmd User FugitiveIndex nmap <buffer>   vsp dv
+  autocmd User FugitiveIndex nmap <buffer>    sp dh
+  autocmd User FugitiveIndex nmap <buffer> <Esc> dq
+augroup END
+
 " Plugin: vim-translator {{{2
 nmap <silent> <leader>t <Plug>Translate
 
@@ -498,6 +534,7 @@ nmap <silent> <leader>t <Plug>Translate
 nmap <F8> :TagbarToggle<CR>
 
 set tags=tags,tags;
+let g:tagbar_width=30
 let g:tagbar_sort = 0
 let g:tagbar_compact=1
 let g:tagbar_type_vim = {
