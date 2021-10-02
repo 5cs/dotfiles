@@ -249,6 +249,7 @@ augroup END
 
 " Navigation {{{2
 nnoremap <silent> <leader>qj :call <SID>jumps_as_qflist()<CR>
+nnoremap <silent> qq :call <SID>quit_qflist()<CR>
 
 function! s:jumps_as_qflist()
   let l:jl    = getjumplist()
@@ -344,6 +345,24 @@ function! QuickFixTextFunc(info) abort
   endfor
 
   return ret
+endfunction
+
+function s:quit_qflist()
+  if getloclist(0, {'winid': 0}).winid == 0
+    execute 'ccl'
+  else
+    if getqflist({'winid': 0}).winid == 0
+      execute 'lcl'
+    else
+      echo ' [q]uickfix, [l]ocation ? '
+      let l:answer = nr2char(getchar())
+      if l:answer == 'q'
+        execute 'ccl'
+      elseif l:answer == 'l'
+        execute 'lcl'
+      endif
+    endif
+  endif
 endfunction
 
 " Autocmd {{{1
