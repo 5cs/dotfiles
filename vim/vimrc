@@ -214,28 +214,21 @@ function! Tabe(...)
     for fn in a:000
       execute printf('tabe %s', fn)
     endfor
+    return 0
   else
     tab split
+    return 1
   endif
 endfunction
 
 " Editting {{{2
 nnoremap <silent> <F5> :Hexe<CR>
-nnoremap <silent> <F6> :Hexw<CR>
+nnoremap <F6> :Hexw<space>
 
-command! -nargs=* -complete=file Hexe call Hexe(<f-args>)
-command! -nargs=0 Hexw execute '%!xxd -r' | set binary | set filetype= | w
-
-function! Hexe(...)
-  if a:0 != 0
-    for fn in a:000
-      execute printf('tabe %s', fn)
-      execute '%!xxd' | set filetype=xxd
-    endfor
-  else
-    execute '%!xxd' | set filetype=xxd
-  endif
-endfunction
+command! -nargs=? -complete=file Hexe :let v=Tabe(<f-args>)
+      \ | exe '%!xxd' | set filetype=xxd | exe (v ? 'q' : '')
+command! -nargs=1 -complete=file Hexw exe '%!xxd -r' | set binary
+      \ | set filetype= | sav! <args>
 
 augroup vimrc
   autocmd BufReadPre   *.bin let &bin=1
@@ -374,6 +367,7 @@ augroup END
 " Filetype {{{1
 augroup vimrc
   autocmd BufRead,BufNewFile *.stp set filetype=stp
+  autocmd Filetype xxd setlocal readonly
 augroup END
 
 " Plugin {{{1
