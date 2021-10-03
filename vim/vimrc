@@ -24,7 +24,7 @@ Plug 'ojroques/vim-oscyank'
 Plug 'fatih/vim-go', { 'tag': '*' }
 Plug 'shougo/unite.vim'
 Plug 'majutsushi/tagbar'
-Plug 'jiangmiao/auto-pairs'
+Plug 'Raimondi/delimitMate'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'voldikss/vim-translator'
 Plug 'tpope/vim-surround'
@@ -631,3 +631,9 @@ nnoremap <F9> :UndotreeToggle<CR>
 let g:undotree_WindowLayout = 3
 let g:undotree_SplitWidth = 45
 let g:undotree_SetFocusWhenToggle = 1
+
+" Plugin: delimitMate {{{2
+imap <expr> <CR>
+    \ pumvisible() ? "\<C-y>" :
+    \ getline('.')[:col('.') - 2] =~ '^\s*$' ? '<Plug>delimitMateCR' :
+    \ "\<C-g>u<Plug>delimitMateCR"
