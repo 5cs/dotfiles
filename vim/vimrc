@@ -168,6 +168,7 @@ vnoremap <silent> aa :<C-u>call argtextobj#v(0)<CR>
 onoremap <silent> ia :<C-u>call argtextobj#o(1)<CR>
 onoremap <silent> aa :<C-u>call argtextobj#o(0)<CR>
 
+nmap d<CR> :%s/\r//eg<CR>``
 map zl zL
 map zh zH
 
@@ -245,96 +246,98 @@ nnoremap <silent> <leader>qj :call <SID>jumps_as_qflist()<CR>
 nnoremap <silent> qq :call <SID>quit_qflist()<CR>
 
 function! s:jumps_as_qflist()
-  let l:jl    = getjumplist()
-  let l:locs  = get(l:jl, 0)
-  let l:pos   = get(l:jl, 1)
-  let l:items = []
-  let l:idx   = 1
-  let l:i     = len(l:locs) - 1
+  let jl    = getjumplist()
+  let locs  = get(jl, 0)
+  let pos   = get(jl, 1)
+  let items = []
+  let idx   = 1
+  let i     = len(locs) - 1
 
-  while l:i >= 0
-    let l:loc   = get(l:locs, l:i)
-    let l:bufnr = get(l:loc, 'bufnr')
-    let l:lnum  = get(l:loc, 'lnum')
-    let l:col   = get(l:loc, 'col') + 1
-    if bufexists(l:bufnr) && bufname(l:bufnr) !~ 'NERD_tree_'
-      let l:text  = get(getbufline(l:bufnr, l:lnum), 0, '......')
-      let l:items = add(l:items, {
-        \ 'bufnr': l:bufnr,
-        \ 'lnum': l:lnum,
-        \ 'col': l:col,
-        \ 'text': l:text
+  while i >= 0
+    let loc     = get(locs, i)
+    let bufnr   = get(loc, 'bufnr')
+    let lnum    = get(loc, 'lnum')
+    let col     = get(loc, 'col') + 1
+    let bufname = bufname(bufnr)
+    if bufexists(bufnr) && bufname !~ 'NERD_tree_' &&
+      \ bufname !~ '__Tagbar__' && bufname !~ '.git/index'
+      let text  = get(getbufline(bufnr, lnum), 0, '......')
+      let items = add(items, {
+        \ 'bufnr': bufnr,
+        \ 'lnum': lnum,
+        \ 'col': col,
+        \ 'text': text
         \ })
     endif
-    if pos + 1 == l:i
-      let l:idx = len(l:items)
+    if pos + 1 == i
+      let idx = len(items)
     endif
-    let l:i -= 1
+    let i -= 1
   endwhile
 
   call setloclist(0, [], ' ', {
     \ 'title': 'JumpList',
-    \ 'items': l:items,
-    \ 'idx': l:idx
+    \ 'items': items,
+    \ 'idx': idx
     \ })
 
-  let l:winid = getloclist(0, {'winid': 0}).winid
-  if l:winid == 0
+  let winid = getloclist(0, {'winid': 0}).winid
+  if winid == 0
     execute 'abo lw'
   else
     if has('nvim')
-      call nvim_set_current_win(l:winid)
+      call nvim_set_current_win(winid)
     else
-      execute l:winid . 'wincmd w'
+      execute winid . 'wincmd w'
     endif
   endif
 endfunction
 
 set qftf=QuickFixTextFunc
 function! QuickFixTextFunc(info) abort
-  let l:ret   = []
-  let l:items = []
+  let ret   = []
+  let items = []
   if a:info.quickfix
-    let l:items = getqflist({'id': a:info.id, 'items': 0}).items
+    let items = getqflist({'id': a:info.id, 'items': 0}).items
   else
-    let l:items = getloclist(a:info.winid, {'id': a:info.id, 'items': 0}).items
+    let items = getloclist(a:info.winid, {'id': a:info.id, 'items': 0}).items
   endif
 
-  let l:limit      = 31
-  let l:fname_fmt1 = '%-' . (l:limit+1) . 's'
-  let l:fname_fmt2 = '…%.' . l:limit . 's'
-  let l:text_fmt   = '%s |%5d:%-3d|%s %s'
+  let limit      = 31
+  let fname_fmt1 = '%-' . (limit+1) . 's'
+  let fname_fmt2 = '…%.' . limit . 's'
+  let text_fmt   = '%s |%5d:%-3d|%s %s'
 
   for idx in range(a:info.start_idx - 1, a:info.end_idx - 1)
-    let l:e     = l:items[idx]
-    let l:fname = ''
-    let l:str   = ''
-    if !l:e.valid
-      let l:str = l:e.text
+    let e     = items[idx]
+    let fname = ''
+    let str   = ''
+    if !e.valid
+      let str = e.text
     else
-      if l:e.bufnr > 0
-        let l:fname = bufname(l:e.bufnr)
-        if l:fname == ''
-          let l:fname = '[No Name]'
+      if e.bufnr > 0
+        let fname = bufname(e.bufnr)
+        if fname == ''
+          let fname = '[No Name]'
         else
-          let l:fname = substitute(l:fname, $HOME, '~', '&')
+          let fname = substitute(fname, $HOME, '~', '&')
         endif
 
-        let l:fname_len = strchars(l:fname)
-        if l:fname_len <= l:limit
-          let l:fname = printf(l:fname_fmt1, l:fname)
+        let fname_len = strchars(fname)
+        if fname_len <= limit
+          let fname = printf(fname_fmt1, fname)
         else
-          let l:fname = printf(l:fname_fmt2,
-                \ strcharpart(l:fname, l:fname_len-l:limit, 999))
+          let fname = printf(fname_fmt2,
+                \ strcharpart(fname, fname_len-limit, 999))
         endif
 
-        let l:lnum  = l:e.lnum > 99999 ? -1 : l:e.lnum
-        let l:col   = l:e.col > 999 ? -1 : l:e.col
-        let l:type  = l:e.type == '' ? '' : ' ' . toupper(strcharpart(l:e.type, 0, 1))
-        let l:str   = printf(l:text_fmt, l:fname, l:lnum, l:col, l:type, l:e.text)
+        let lnum  = e.lnum > 99999 ? -1 : e.lnum
+        let col   = e.col > 999 ? -1 : e.col
+        let type  = e.type == '' ? '' : ' ' . toupper(strcharpart(e.type, 0, 1))
+        let str   = printf(text_fmt, fname, lnum, col, type, e.text)
       end
     endif
-    let l:ret = add(l:ret, l:str)
+    let ret = add(ret, str)
   endfor
 
   return ret
@@ -348,10 +351,10 @@ function s:quit_qflist()
       execute 'lcl'
     else
       echo ' [q]uickfix, [l]ocation ? '
-      let l:answer = nr2char(getchar())
-      if l:answer == 'q'
+      let answer = nr2char(getchar())
+      if answer == 'q'
         execute 'ccl'
-      elseif l:answer == 'l'
+      elseif answer == 'l'
         execute 'lcl'
       endif
     endif
@@ -423,68 +426,68 @@ nnoremap <silent> <leader>qd :call <SID>diagnostic_as_qflist()<CR>
 let g:diag_qfid = -1
 
 function! s:diagnostic_change()
-  let l:info = getqflist({ 'id': g:diag_qfid, 'winid': 0, 'nr': 0 })
-  if l:info['winid'] != 0
-    let l:info['show'] = 0
-    call s:diagnostic_as_qflist(l:info)
+  let info = getqflist({ 'id': g:diag_qfid, 'winid': 0, 'nr': 0 })
+  if info.winid != 0
+    let info.show = 0
+    call s:diagnostic_as_qflist(info)
   endif
 endfunction
 
 function! s:diagnostic_as_qflist(...)
-  let l:args        = a:0 == 0 ? {} : a:1
-  let l:diagnostics = CocAction('diagnosticList')
-  let l:items       = []
-  for diag in l:diagnostics
-    let l:text = printf('[%s %s] %s', get(diag, 'source', 'coc.nvim'),
+  let args        = a:0 == 0 ? {} : a:1
+  let diagnostics = CocAction('diagnosticList')
+  let items       = []
+  for diag in diagnostics
+    let text = printf('[%s %s] %s', get(diag, 'source', 'coc.nvim'),
       \ get(diag, 'code', ''), get(diag, 'message'))
-    let l:item = {
-      \ 'filename': diag['file'],
-      \ 'lnum': diag['lnum'],
-      \ 'col': diag['col'],
-      \ 'text': l:text,
-      \ 'type': diag['severity']
+    let item = {
+      \ 'filename': diag.file,
+      \ 'lnum': diag.lnum,
+      \ 'col': diag.col,
+      \ 'text': text,
+      \ 'type': diag.severity
       \ }
-    let l:items = add(l:items, l:item)
+    let items = add(items, item)
   endfor
 
-  let l:id    = -1
-  let l:winid = get(l:args, 'winid', 0)
-  let l:nr    = get(l:args, 'nr', 0)
-  let l:show  = get(l:args, 'show', 1)
+  let id    = -1
+  let winid = get(args, 'winid', 0)
+  let nr    = get(args, 'nr', 0)
+  let show  = get(args, 'show', 1)
 
-  if l:winid && l:nr
-    let l:id    = g:diag_qfid
+  if winid && nr
+    let id    = g:diag_qfid
   else
-    let l:info  = getqflist({ 'id': g:diag_qfid, 'winid': 0, 'nr': 0 })
-    let l:id    = l:info['id']
-    let l:winid = l:info['winid']
-    let l:nr    = l:info['nr']
+    let info  = getqflist({ 'id': g:diag_qfid, 'winid': 0, 'nr': 0 })
+    let id    = info.id
+    let winid = info.winid
+    let nr    = info.nr
   endif
 
-  let l:action = l:id == 0 ? ' ' : 'r'
-  call setqflist([], l:action, {
-    \ 'id': l:id,
+  let action = id == 0 ? ' ' : 'r'
+  call setqflist([], action, {
+    \ 'id': id,
     \ 'title': 'CocDiagnosticList',
-    \ 'items': l:items
+    \ 'items': items
     \ })
 
-  if l:id == 0
-    let l:info      = getqflist({ 'id': l:id, 'nr': l:nr })
-    let g:diag_qfid = l:info['id']
-    let l:nr        = l:info['nr']
+  if id == 0
+    let info        = getqflist({ 'id': id, 'nr': nr })
+    let g:diag_qfid = info.id
+    let nr          = info.nr
   endif
 
-  if l:show
-    if l:winid == 0
+  if show
+    if winid == 0
       execute 'bo cope'
     else
       if has('nvim')
-        call nvim_set_current_win(l:winid)
+        call nvim_set_current_win(winid)
       else
-        execute l:winid . 'wincmd w'
+        execute winid . 'wincmd w'
       endif
     endif
-    execute 'sil ' . l:nr . 'chi'
+    execute 'sil ' . nr . 'chi'
   endif
 endfunction
 
@@ -534,10 +537,10 @@ nnoremap <silent> <leader>w :echo expand("%:p") . ':' . line(".")<CR>
 
 " copy remote server vim fn:ln to local system's clipboard for gdb or sth else
 function! s:get_fnln()
-  let l:tempZ = @z
+  let tempZ = @z
   let @z = expand("%:h") . '/' . expand("%:t") . ':' . line(".")
   OSCYankReg z
-  let @z = l:tempZ
+  let @z = tempZ
 endfunction
 
 " Plugin: vim-gitgutter {{{2
@@ -572,7 +575,7 @@ nnoremap <leader>gh :Gvdiffsplit HEAD~
 nnoremap <leader>ge :Gedit<CR>
 
 function! GitIndex()
-  let l:bufname = bufname('%')
+  let bufname = bufname('%')
   if winnr('$') == 1 && bufname == ''
     execute 'Git'
   else
