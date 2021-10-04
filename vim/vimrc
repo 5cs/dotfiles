@@ -40,6 +40,7 @@ Plug 'andymass/vim-matchup'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'wellle/targets.vim'
 Plug 'mbbill/undotree'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 if has('nvim')
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
   Plug 'kevinhwang91/nvim-bqf'
@@ -646,3 +647,9 @@ imap <expr> <CR>
     \ pumvisible() ? "\<C-y>" :
     \ getline('.')[:col('.') - 2] =~ '^\s*$' ? '<Plug>delimitMateCR' :
     \ "\<C-g>u<Plug>delimitMateCR"
+
+" Plugin: vim-visual-multi {{{2
+let g:VM_leader = '<Space>'
+let g:VM_maps = {}
+let g:VM_maps['Find Under'] = '<C-n>'
+let g:VM_maps['Find Subword Under'] = '<C-n>'
