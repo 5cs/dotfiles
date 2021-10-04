@@ -22,15 +22,15 @@ Plug 'junegunn/fzf.vim'
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 Plug 'ojroques/vim-oscyank'
 Plug 'fatih/vim-go', { 'tag': '*' }
-Plug 'shougo/unite.vim'
 Plug 'majutsushi/tagbar'
 Plug 'Raimondi/delimitMate'
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'voldikss/vim-translator'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
+Plug 'rbong/vim-flog'
+Plug 'rhysd/git-messenger.vim'
 Plug 'tweekmonster/startuptime.vim'
 Plug 'justinmk/vim-sneak'
 Plug 'airblade/vim-gitgutter'
@@ -171,6 +171,8 @@ onoremap <silent> aa :<C-u>call argtextobj#o(0)<CR>
 nmap d<CR> :%s/\r//eg<CR>``
 map zl zL
 map zh zH
+
+nmap qt :tabc<CR>
 
 " Window {{{2
 nnoremap <S-up>    2<C-w>+
@@ -561,9 +563,7 @@ function! GitGutterNextHunkCycle()
 endfunction
 
 nmap <silent> <leader>hs <Plug>(GitGutterStageHunk)
-    \ :call repeat#set("\<Plug>(GitGutterStageHunk)")<CR>
 nmap <silent> <leader>hp <Plug>(GitGutterPreviewHunk)
-    \ :call repeat#set("\<Plug>(GitGutterPreviewHunk)")<CR>
 
 " Plugin: vim-fugitive {{{2
 nnoremap <leader>gg :call GitIndex()<CR>
@@ -598,6 +598,15 @@ augroup vimrc
   autocmd User FugitiveIndex nmap <buffer>    sp dh
   autocmd User FugitiveIndex nmap <buffer> <Esc> dq
 augroup END
+
+" Plugin: git-messenger.vim {{{2
+let g:git_messenger_no_default_mappings = 0
+let g:git_messenger_always_into_popup = 1
+nmap <leader>gm <Plug>(git-messenger)
+
+" Plugin: vim-flog {{{2
+nmap <leader>gl :Flog<CR>
+nmap <leader>gf :Flog -path=%<CR>
 
 " Plugin: vim-translator {{{2
 nmap <silent> <leader>t <Plug>Translate
