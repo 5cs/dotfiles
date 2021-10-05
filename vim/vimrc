@@ -210,6 +210,8 @@ inoremap <silent> <F2>      <ESC>:Tabe<CR>
 if has('nvim')
   map <F3> <Esc>:tabe\|term<CR>
   tnoremap <M-\> <C-\><C-n>
+  tnoremap <M-left> <C-\><C-n>:tabp<CR>
+  tnoremap <M-right> <C-\><C-n>:tabn<CR>
 else
   map <F3> <Esc>:shell<CR>
 endif
