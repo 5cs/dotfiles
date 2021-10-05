@@ -425,26 +425,35 @@ endfunction
 let s:goto_definition_state = 'Initial'
 function! s:goto_definition_lsp_async() abort
   if exists('g:did_coc_loaded') && coc#rpc#ready()
-    let s:goto_definition_state = 'LSP'
+    let s:goto_definition_state = 'Pending'
     call CocActionAsync('jumpDefinition',
       \ { err,resp -> s:goto_definition_lsp_cb(err, resp) })
   endif
 endfunction
 
 function! s:goto_definition_lsp_cb(err, resp) abort
-  if a:err != v:null || resp == v:null
-    let s:goto_definition_state = 'Taglist'
+  if a:err == v:null && a:resp != v:false
+    let s:goto_definition_state = 'Done'
     return
   endif
+  " lsp error
   let s:goto_definition_state = 'Done'
+  call s:taglist()
 endfunction
 
 function! s:goto_definition_fallback(...) abort
-  if coc#status() =~ 'requesting' | return | endif
+  if exists('g:did_coc_loaded') &&
+    \ coc#status() =~ 'requesting' | return | endif
   if s:goto_definition_state == 'Done'
     let s:goto_definition_state = 'Initial'
     return
   endif
+  " lsp timeout
+  let s:goto_definition_state = 'Done'
+  call s:taglist()
+endfunction
+
+function! s:taglist()
   let pattern = expand('<cword>')
   let tags = taglist('^' . pattern . '$')
   if !empty(tags)
