@@ -407,9 +407,54 @@ nmap <silent> [d <Plug>(coc-diagnostic-prev)
     \ :call repeat#set("\<Plug>(coc-diagnostic-prev)")<CR>
 nmap <silent> ]d <Plug>(coc-diagnostic-next)
     \ :call repeat#set("\<Plug>(coc-diagnostic-next)")<CR>
-nmap <silent> gd <Plug>(coc-definition)
+if has('nvim')
+  nmap <silent> gd :<C-u>call <SID>goto_definition()<CR>
+else
+  nmap <silent> gd <Plug>(coc-definition)
+endif
 nmap <silent> gr <Plug>(coc-references)
 nmap <leader>rn  <Plug>(coc-rename)
+
+function! s:goto_definition() abort
+  call s:goto_definition_lsp_async()
+  call timer_start(600, { -> s:goto_definition_fallback() })
+endfunction
+
+let s:goto_definition_state = 'Initial'
+function! s:goto_definition_lsp_async() abort
+  if exists('g:did_coc_loaded') && coc#rpc#ready()
+    let s:goto_definition_state = 'LSP'
+    call CocActionAsync('jumpDefinition',
+      \ { err,resp -> s:goto_definition_lsp_cb(err, resp) })
+  endif
+endfunction
+
+function! s:goto_definition_lsp_cb(err, resp) abort
+  if a:err != v:null || resp == v:null
+    let s:goto_definition_state = 'Taglist'
+    return
+  endif
+  let s:goto_definition_state = 'Done'
+endfunction
+
+function! s:goto_definition_fallback(...) abort
+  if coc#status() =~ 'requesting' | return | endif
+  if s:goto_definition_state == 'Done'
+    let s:goto_definition_state = 'Initial'
+    return
+  endif
+  let pattern = expand('<cword>')
+  let tags = taglist('^' . pattern . '$')
+  if !empty(tags)
+    execute 'tag ' . pattern
+    return
+  endif
+  try
+    normal! gd
+  catch /E349:/
+    echom 'No identifier under cursor'
+  endtry
+endfunction
 
 " show docs
 nnoremap <silent> K :call <SID>show_documentation()<CR>
