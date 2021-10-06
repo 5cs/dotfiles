@@ -43,6 +43,7 @@ Plug 'mbbill/undotree'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 if has('nvim')
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+  Plug 'nvim-treesitter/nvim-treesitter-textobjects'
   Plug 'kevinhwang91/nvim-bqf'
 else
   Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
@@ -293,11 +294,7 @@ function! s:jumps_as_qflist()
   if winid == 0
     execute 'abo lw'
   else
-    if has('nvim')
-      call nvim_set_current_win(winid)
-    else
-      execute winid . 'wincmd w'
-    endif
+    call win_gotoid(winid)
   endif
 endfunction
 
@@ -543,11 +540,7 @@ function! s:diagnostic_as_qflist(...)
     if winid == 0
       execute 'bo cope'
     else
-      if has('nvim')
-        call nvim_set_current_win(winid)
-      else
-        execute winid . 'wincmd w'
-      endif
+      call win_gotoid(winid)
     endif
     execute 'sil ' . nr . 'chi'
   endif
@@ -710,5 +703,5 @@ imap <expr> <CR>
 " Plugin: vim-visual-multi {{{2
 let g:VM_leader = '<Space>'
 let g:VM_maps = {}
-let g:VM_maps['Find Under'] = '<C-n>'
-let g:VM_maps['Find Subword Under'] = '<C-n>'
+let g:VM_maps['Find Under'] = '<C-d>'
+let g:VM_maps['Find Subword Under'] = '<C-d>'

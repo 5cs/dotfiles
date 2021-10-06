@@ -5,18 +5,56 @@ set runtimepath-=~/.vim
 let &packpath=&runtimepath
 source ~/.vimrc
 
+" nvim-treesitter
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = "cpp", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-  ignore_install = { "javascript" }, -- List of parsers to ignore installing
+  ensure_installed = {
+    'bash',
+    'c',
+    'cpp',
+    'python'
+  },
+  ignore_install = { 'javascript' },
   highlight = {
-    enable = true,              -- false will disable the whole extension
-    disable = { "c", "rust" },  -- list of language that will be disabled
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
+    enable = true,
+    disable = { 'rust' },
     additional_vim_regex_highlighting = false,
   },
+  textobjects = {
+    select = {
+      enable = true,
+      lookahead = true,
+      disable = {},
+      keymaps = {
+        ['af'] = '@function.outer',
+        ['if'] = '@function.inner',
+        ['ac'] = '@class.outer',
+        ['ic'] = '@class.inner',
+        ['aC'] = '@conditional.outer',
+        ['iC'] = '@conditional.inner',
+        ['ae'] = '@block.outer',
+        ['ie'] = '@block.inner',
+        ['iL'] = {
+          c = '(function_definition) @function',
+          cpp = '(function_definition) @function',
+          python = '(function_definition) @function',
+        },
+      }
+    },
+  }
+}
+EOF
+
+" nvim-bqf
+lua <<EOF
+require('bqf').setup {
+  func_map = {
+    open = 'o',
+    openc = '<CR>',
+    pscrollup = '<C-p>',
+    pscrolldown = '<C-n>',
+    prevfile = '<C-f>',
+    nextfile = '<C-b>'
+  }
 }
 EOF
