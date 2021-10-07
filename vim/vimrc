@@ -542,7 +542,7 @@ function! s:diagnostic_as_qflist(...)
     else
       call win_gotoid(winid)
     endif
-    execute 'sil ' . nr . 'chi'
+    execute 'sil ' . (has('nvim') ? nr : '') . 'chi'
   endif
 endfunction
 
