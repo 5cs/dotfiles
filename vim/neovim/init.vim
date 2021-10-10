@@ -28,10 +28,10 @@ require'nvim-treesitter.configs'.setup {
       keymaps = {
         ['af'] = '@function.outer',
         ['if'] = '@function.inner',
-        ['ac'] = '@class.outer',
-        ['ic'] = '@class.inner',
-        ['aC'] = '@conditional.outer',
-        ['iC'] = '@conditional.inner',
+        ['ak'] = '@class.outer',
+        ['ik'] = '@class.inner',
+        ['ac'] = '@conditional.outer',
+        ['ic'] = '@conditional.inner',
         ['ae'] = '@block.outer',
         ['ie'] = '@block.inner',
         ['iL'] = {
