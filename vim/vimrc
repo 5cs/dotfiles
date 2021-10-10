@@ -580,7 +580,7 @@ nnoremap <silent> <C-x><C-j> :<C-u>Marks<CR>
 nnoremap <leader>n :NERDTreeToggle<CR>
 
 augroup vimrc
-  autocmd VimEnter * NERDTree | wincmd p
+  " autocmd VimEnter * NERDTree | wincmd p
   autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 &&
         \ exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
 augroup END
