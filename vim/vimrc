@@ -589,21 +589,14 @@ augroup END
 
 " Plugin: vim-oscyank {{{2
 autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '' | OSCYankReg " | endif
-nnoremap <silent> <leader>e :call <SID>get_fnln()<CR>
-nnoremap <silent> <leader>o :call <SID>get_cwd()<CR>
-nnoremap <silent> <leader>w :echo expand("%:p") . ':' . line(".")<CR>
+nnoremap <silent> <space>f
+    \ :call <SID>oscyank(expand('%:h') . '/' . expand('%:t') . ':' . line('.'))<CR>
+nnoremap <silent> <space>p :call <SID>oscyank(getcwd())<CR>
+nnoremap <silent> <space>l :echo expand("%:p") . ':' . line(".")<CR>
 
-" copy remote server vim fn:ln to local system's clipboard for gdb or sth else
-function! s:get_fnln()
+function! s:oscyank(content)
   let tempZ = @z
-  let @z = expand("%:h") . '/' . expand("%:t") . ':' . line(".")
-  OSCYankReg z
-  let @z = tempZ
-endfunction
-
-function! s:get_cwd()
-  let tempZ = @z
-  let @z = getcwd()
+  let @z = a:content
   OSCYankReg z
   let @z = tempZ
 endfunction
