@@ -47,6 +47,7 @@ if has('nvim')
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
   Plug 'nvim-treesitter/nvim-treesitter-textobjects'
   Plug 'kevinhwang91/nvim-bqf'
+  Plug 'phaazon/hop.nvim'
 else
   Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 endif
@@ -251,6 +252,22 @@ augroup vimrc
   autocmd BufWritePost *.bin if &bin | %!xxd
   autocmd BufWritePost *.bin set nomod | endif
 augroup END
+
+command! DeleteInactiveBuffers call <SID>delete_inactive_buffers()
+function! s:delete_inactive_buffers()
+  let tablist = []
+  for i in range(tabpagenr('$'))
+    call extend(tablist, tabpagebuflist(i + 1))
+  endfor
+  let n = 0
+  for i in range(1, bufnr('$'))
+    if bufexists(i) && !getbufvar(i, "&mod") && index(tablist, i) == -1
+      silent execute 'bw!' i
+      let n = n + 1
+    endif
+  endfor
+  echom n . ' buffer(s) wiped out'
+endfunction
 
 " Navigation {{{2
 nnoremap <silent> <leader>qj :call <SID>jumps_as_qflist()<CR>
@@ -731,3 +748,11 @@ let g:startify_lists = [
       \ { 'type': function('s:gitUntracked'), 'header': ['   git untracked']},
       \ { 'type': 'commands',  'header': ['   Commands']       },
       \ ]
+
+" Plugin: hop.nvim {{{2
+if has('nvim')
+  hi HopNextKey guifg=#ff9900
+  hi HopNextKey1 guifg=#ff9900
+  hi HopNextKey2 guifg=#ff9900
+  nmap f :HopChar2<CR>
+endif
