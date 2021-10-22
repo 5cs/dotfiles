@@ -664,6 +664,7 @@ augroup vimrc
   autocmd User FugitiveIndex nmap <buffer> <C-p> [c
   autocmd User FugitiveIndex nmap <buffer> <C-s> s
   autocmd User FugitiveIndex nmap <buffer> <C-u> u
+  autocmd User FugitiveIndex nmap <buffer> <C-z> X
   autocmd User FugitiveIndex nmap <buffer>     a -
   autocmd User FugitiveIndex nmap <buffer>    ]f ]/
   autocmd User FugitiveIndex nmap <buffer>    [f [/
