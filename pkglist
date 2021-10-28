@@ -11,6 +11,7 @@ libtool
 lua
 luajit
 make
+man-pages
 ninja-build
 nodejs
 perl
