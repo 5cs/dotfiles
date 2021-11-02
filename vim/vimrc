@@ -143,7 +143,7 @@ nnoremap U     :execute 'ea ' . v:count1 . 'f'<CR>
 nnoremap <M-r> :execute 'lat ' . v:count1 . 'f'<CR>
 nnoremap <expr> k (v:count > 5 ? 'm`' . v:count : '') . 'k'
 nnoremap <expr> j (v:count > 5 ? 'm`' . v:count : '') . 'j'
-nnoremap <silent>g/ :let @/ = expand('<cword>')<CR>:set hls!<CR>
+nnoremap <silent>g/ :let @/ = expand('<cword>')<CR>:set hls<CR>
 nnoremap <leader>ev :Tabe ~/.vimrc<CR>
 nnoremap <leader>sv :source $MYVIMRC<CR>
 inoremap <silent> <C-a> <home>
@@ -178,6 +178,30 @@ onoremap <silent> aa :<C-u>call argtextobj#o(0)<CR>
 nmap d<CR> :%s/\r//eg<CR>``
 map zl zL
 map zh zH
+
+" select last inserted text
+nnoremap gV `[v`]
+
+nnoremap <leader>w :call <SID>save_change_marks()<bar>w<bar>call <SID>restore_change_marks()<CR>
+
+" Use <space><space> to:
+"   - redraw
+"   - clear 'hlsearch'
+"   - update the current diff (if any)
+" Use {count}<space><space> to:
+"   - reload (:edit) the current buffer
+nnoremap <silent><expr> <space><space>
+  \ (v:count ? ':<C-u>:call <SID>save_change_marks()\|edit\|call <SID>restore_change_marks()<CR>' : '')
+  \ . ':nohlsearch' . (has('diff') ? '\|diffupdate' : '') . '<CR>'
+
+function! s:save_change_marks() abort
+  let s:change_marks = [getpos("'["), getpos("']")]
+endfunction
+
+function! s:restore_change_marks() abort
+  call setpos("'[", s:change_marks[0])
+  call setpos("']", s:change_marks[1])
+endfunction
 
 nmap qt :tabc<CR>
 if has('nvim')
