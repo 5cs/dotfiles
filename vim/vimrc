@@ -183,7 +183,8 @@ map zh zH
 " select last inserted text
 nnoremap gV `[v`]
 
-nnoremap <leader>w :call <SID>save_change_marks()<bar>w<bar>call <SID>restore_change_marks()<CR>
+nnoremap <leader>w :call <SID>keep_change_marks_exec('w')<CR>
+nnoremap <leader>W :call <SID>keep_change_marks_exec('w !sudo tee %')<CR>
 
 " Use <space><space> to:
 "   - redraw
@@ -192,8 +193,14 @@ nnoremap <leader>w :call <SID>save_change_marks()<bar>w<bar>call <SID>restore_ch
 " Use {count}<space><space> to:
 "   - reload (:edit) the current buffer
 nnoremap <silent><expr> <space><space>
-  \ (v:count ? ':<C-u>:call <SID>save_change_marks()\|edit\|call <SID>restore_change_marks()<CR>' : '')
+  \ (v:count ? ":<C-u>:call <SID>keep_change_marks_exec('edit')<CR>" : '')
   \ . ':nohlsearch' . (has('diff') ? '\|diffupdate' : '') . '<CR>'
+
+function! s:keep_change_marks_exec(cmd)
+  call s:save_change_marks()
+  execute a:cmd
+  call s:restore_change_marks()
+endfunction
 
 function! s:save_change_marks() abort
   let s:change_marks = [getpos("'["), getpos("']")]
