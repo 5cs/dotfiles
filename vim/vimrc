@@ -46,6 +46,7 @@ if has('nvim')
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
   Plug 'nvim-treesitter/nvim-treesitter-textobjects'
   Plug 'kevinhwang91/nvim-bqf'
+  Plug 'kevinhwang91/nvim-hlslens'
   Plug 'phaazon/hop.nvim'
   Plug 'nvim-lua/plenary.nvim'
   Plug 'lewis6991/gitsigns.nvim'
@@ -137,8 +138,9 @@ hi Normal guibg=NONE ctermbg=NONE
 " Mapping {{{1
 let mapleader=","
 nnoremap Y y$
-nnoremap n nzzzv
-nnoremap N Nzzzv
+for x in ['n', 'N', '*', '#', 'g*', 'g#']
+  execute printf('nnoremap %s %szzzv', x, x)
+endfor
 nnoremap T <C-w>gf
 nnoremap U     :execute 'ea ' . v:count1 . 'f'<CR>
 nnoremap <M-r> :execute 'lat ' . v:count1 . 'f'<CR>
@@ -791,5 +793,16 @@ if has('nvim')
   hi HopNextKey guifg=#ff9900
   hi HopNextKey1 guifg=#ff9900
   hi HopNextKey2 guifg=#ff9900
-  nmap f :HopChar2<CR>
+  nmap f :HopChar1<CR>
+endif
+
+" Plugin: nvim-hlslens {{{2
+if has('nvim')
+  let hl = "<Cmd>lua require('hlslens').start()<CR>"
+  for x in ['n', 'N']
+    execute printf("noremap <silent> %s <Cmd>execute('normal! ' . v:count1 . '%s')<CR>%szzzv", x, x, hl)
+  endfor
+  for x in ['*', '#', 'g*', 'g#']
+    execute printf('noremap %s %s%szzzv', x, x, hl)
+  endfor
 endif
