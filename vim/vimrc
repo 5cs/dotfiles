@@ -520,6 +520,41 @@ function! s:taglist()
   endtry
 endfunction
 
+" coc action as qflist
+nmap <silent> <leader>qr :<C-u>call <SID>coc_as_qflist('references')<CR>
+nmap <silent> <leader>qy :<C-u>call <SID>coc_as_qflist('definitions')<CR>
+
+function! s:coc_as_qflist(action) abort
+  call CocActionAsync(a:action, { err,data -> s:coc_as_qflist_cb(err, data) })
+endfunction
+
+function! s:coc_as_qflist_cb(err, data) abort
+  if a:err
+    echom 'Coc action error'
+  else
+    let locs = []
+    for loc in a:data
+      let item = {
+        \ 'filename': substitute(loc.uri, 'file://', '', 'g'),
+        \ 'lnum': loc.range.start.line + 1,
+        \ 'col': loc.range.start.character,
+        \ }
+      let locs = add(locs, item)
+    endfor
+    call setloclist(0, [], ' ', {
+      \ 'title': 'CocActionList',
+      \ 'items': locs,
+      \ })
+  endif
+
+  let winid = getloclist(0, {'winid': 0}).winid
+  if winid == 0
+    execute 'abo lw'
+  else
+    call win_gotoid(winid)
+  endif
+endfunction
+
 " show docs
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 function! s:show_documentation()
