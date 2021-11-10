@@ -366,7 +366,7 @@ function! QuickFixTextFunc(info) abort
   let limit      = 31
   let fname_fmt1 = '%-' . (limit+1) . 's'
   let fname_fmt2 = '…%.' . limit . 's'
-  let text_fmt   = '%s |%5d:%-3d|%s %s'
+  let text_fmt   = '%s |%5d:%-3d|%s%s'
 
   for idx in range(a:info.start_idx - 1, a:info.end_idx - 1)
     let e     = items[idx]
@@ -394,7 +394,8 @@ function! QuickFixTextFunc(info) abort
         let lnum  = e.lnum > 99999 ? -1 : e.lnum
         let col   = e.col > 999 ? -1 : e.col
         let type  = e.type == '' ? '' : ' ' . toupper(strcharpart(e.type, 0, 1))
-        let str   = printf(text_fmt, fname, lnum, col, type, e.text)
+        let text  = e.text == '' ? '' : ' ' . e.text
+        let str   = printf(text_fmt, fname, lnum, col, type, text)
       end
     endif
     let ret = add(ret, str)
