@@ -42,6 +42,7 @@ Plug 'mbbill/undotree'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'ap/vim-css-color'
 Plug 'mhinz/vim-startify'
+Plug 'rust-lang/rust.vim'
 if has('nvim')
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
   Plug 'nvim-treesitter/nvim-treesitter-textobjects'
@@ -842,3 +843,6 @@ if has('nvim')
     execute printf('noremap %s %s%szzzv', x, x, hl)
   endfor
 endif
+
+" Plugin: rust.vim {{{2
+let g:rustfmt_autosave = 1
