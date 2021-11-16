@@ -161,7 +161,7 @@ function __nvim() {
     && make install || die "Build neovim failed."
   ln -sf $PKG/nvim/bin/nvim $BIN/nvim
   mkdir -p ~/.config/nvim/
-  ln -sf $DIR/vim/neovim/init.vim ~/.config/nvim/init.vim
+  ln -sf $DIR/nvim/init.vim ~/.config/nvim/init.vim
   if [ ! -e ~/.vimrc ]; then ln -sf $DIR/vim/vimrc ~/.vimrc; fi
   nvim -c "PlugInstall --sync" -c "PlugUpdate --sync" -c "qall"
   # coc-nvim
