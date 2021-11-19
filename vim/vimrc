@@ -758,6 +758,7 @@ nmap <leader>gf :Flog -path=%<CR>
 
 " Plugin: vim-translator {{{2
 nmap <silent> <leader>t <Plug>Translate
+vmap <silent> <leader>t <Plug>TranslateV
 
 " Plugin: tagbar {{{2
 nmap <F8> :TagbarToggle<CR>
