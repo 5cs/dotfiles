@@ -524,6 +524,7 @@ endfunction
 " coc action as qflist
 nmap <silent> <leader>qr :<C-u>call <SID>coc_as_qflist('references')<CR>
 nmap <silent> <leader>qy :<C-u>call <SID>coc_as_qflist('definitions')<CR>
+nmap <silent> <leader>qi :<C-u>call <SID>coc_as_qflist('implementations')<CR>
 
 function! s:coc_as_qflist(action) abort
   call CocActionAsync(a:action, { err,data -> s:coc_as_qflist_cb(err, data) })
