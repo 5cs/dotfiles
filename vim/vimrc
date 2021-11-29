@@ -432,7 +432,9 @@ augroup END
 " Filetype {{{1
 augroup vimrc
   autocmd BufRead,BufNewFile *.stp set filetype=stp
-  autocmd Filetype xxd setlocal readonly
+  autocmd Filetype xxd    setlocal readonly
+  autocmd FileType sh     xnoremap <buffer> <leader>x :w !bash<CR>
+  autocmd FileType python xnoremap <buffer> <leader>x :w !python3<CR>
 augroup END
 
 " Plugin {{{1
