@@ -185,8 +185,9 @@ function __tmux() {
 
 
 function __bash() {
-  echo "export PATH=$BIN/:\$PATH" >> $DIR/bash/shrc
-  echo "[ -f $DIR/bash/shrc ] && source $DIR/bash/shrc" >> ~/.bashrc
+  local fn=bash/bashrc_local
+  echo "export PATH=$BIN/:\$PATH" >> $DIR/$fn
+  echo "[ -f $DIR/$fn ] && source $DIR/$fn" >> ~/.bashrc
 }
 
 function __ctags() {
