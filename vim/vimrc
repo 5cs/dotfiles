@@ -182,6 +182,9 @@ onoremap <silent> aa :<C-u>call argtextobj#o(0)<CR>
 nmap d<CR> :%s/\r//eg<CR>``
 map zl zL
 map zh zH
+nnoremap p p=`]
+nnoremap <expr> <space>j 'm`' . v:count . 'O<Esc>``'
+nnoremap <expr> <space>k 'm`' . v:count . 'o<Esc>``'
 
 " select last inserted text
 nnoremap gV `[v`]
@@ -214,11 +217,6 @@ function! s:restore_change_marks() abort
   call setpos("']", s:change_marks[1])
 endfunction
 
-nmap qt :tabc<CR>
-if has('nvim')
-  tmap qt <C-\><C-n>:tabc<CR>
-endif
-
 " Window {{{2
 nnoremap <S-up>    2<C-w>+
 nnoremap <S-down>  2<C-w>-
@@ -242,23 +240,31 @@ function! s:tmux_navigate(direction) abort
   endif
 endfunction
 
-nnoremap <silent> <C-left>  :tabp<CR>
-nnoremap <silent> <C-right> :tabn<CR>
-nnoremap <silent> <F2>      :Tabe<CR>
-inoremap <silent> <C-left>  <ESC>:tabp<CR>
-inoremap <silent> <C-right> <ESC>:tabn<CR>
-inoremap <silent> <F2>      <ESC>:Tabe<CR>
+nnoremap qt :<C-u>tabc<CR>
+for i in range(1, 9)
+  execute printf('nnoremap <leader>%s %sgt', i, i)
+endfor
+nnoremap <silent> [t :tabp<CR>:call repeat#set("[t")<CR>
+nnoremap <silent> ]t :tabn<CR>:call repeat#set("]t")<CR>
+nnoremap <silent> [T :tabr<CR>
+nnoremap <silent> ]T :tabl<CR>
+nnoremap <silent> \t :+tabm<CR>:call repeat#set("\\t")<CR>
+nnoremap <silent> \T :-tabm<CR>:call repeat#set("\\T")<CR>
 if has('nvim')
-  map <F3> <Esc>:tabe\|term<CR>
   tnoremap <C-\> <C-\><C-n>
-  tnoremap <C-left> <C-\><C-n>:tabp<CR>
-  tnoremap <C-right> <C-\><C-n>:tabn<CR>
+  tnoremap qt <C-\><C-n>:tabc<CR>
+  tnoremap [t <C-\><C-n>:tabp<CR>
+  tnoremap ]t <C-\><C-n>:tabn<CR>
+  tnoremap [T <C-\><C-n>:tabr<CR>
+  tnoremap ]T <C-\><C-n>:tabl<CR>
+  nnoremap <F3> <Esc>:tabe\|term<CR>
 else
-  map <F3> <Esc>:shell<CR>
+  nnoremap <F3> <Esc>:shell<CR>
 endif
+nnoremap <silent> <F2> :Tabe<CR>
+inoremap <silent> <F2> <ESC>:Tabe<CR>
 
 command! -nargs=* -complete=file Tabe call Tabe(<f-args>)
-
 function! Tabe(...)
   if a:0 != 0
     for fn in a:000
