@@ -257,7 +257,10 @@ if has('nvim')
   tnoremap ]t <C-\><C-n>:tabn<CR>
   tnoremap [T <C-\><C-n>:tabr<CR>
   tnoremap ]T <C-\><C-n>:tabl<CR>
-  nnoremap <F3> <Esc>:tabe\|term<CR>
+  nnoremap <expr> <F3>
+    \ ':tabe<CR>' . (bufexists('term://term') ?
+    \ ':b term://term<CR>:bd#<CR>' :
+    \ ':terminal<CR><C-\><C-n>:fi term://term<CR>')
 else
   nnoremap <F3> <Esc>:shell<CR>
 endif
@@ -304,7 +307,8 @@ function! s:delete_inactive_buffers()
   endfor
   let n = 0
   for i in range(1, bufnr('$'))
-    if bufexists(i) && !getbufvar(i, "&mod") && index(tablist, i) == -1
+    if bufexists(i) && !getbufvar(i, "&mod") &&
+      \ index(tablist, i) == -1 && bufname(i) !~ 'term://'
       silent execute 'bw!' i
       let n = n + 1
     endif
