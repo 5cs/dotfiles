@@ -42,6 +42,7 @@ Plug 'mbbill/undotree'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'ap/vim-css-color'
 Plug 'mhinz/vim-startify'
+Plug 'mhinz/vim-grepper'
 Plug 'rust-lang/rust.vim'
 if has('nvim')
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -681,6 +682,32 @@ nnoremap          <leader>fR :<C-u>Rg!<Space>
 nnoremap <silent> <leader>f; :<C-u>History:<CR>
 nnoremap <silent> <leader>f/ :<C-u>History/<CR>
 nnoremap <silent> <leader>fm :<C-u>Marks<CR>
+
+" Plugin: vim-grepper {{{2
+let g:grepper = {}
+let g:grepper.tools = ['rg', 'git', 'grep', 'findstr']
+let g:grepper.rg = {
+      \ 'grepprg': 'rg -H --no-heading --vimgrep --smart-case',
+      \ 'grepformat': '%f:%l:%c:%m,%f:%l:%m'
+      \ }
+let g:grepper.dir = 'repo,file'
+let g:grepper.jump = 0
+let g:grepper.prompt = 0
+nmap gs <Plug>(GrepperOperator)
+xmap gs <Plug>(GrepperOperator)
+
+nnoremap <leader>rg :RgGrepper<space>
+nnoremap <leader>qs :call <SID>histexec('RgGrepper <C-r><C-w>')<CR>
+command! -nargs=* RgGrepper call <SID>RgGrepper(<f-args>)
+function! s:RgGrepper(text)
+  set nohlsearch | let @/ = a:text
+  call histadd('cmd', 'RgGrepper ' . a:text)
+  execute 'GrepperRg ' . a:text
+endfunction
+aug Grepper
+  au!
+  au User Grepper ++nested call setqflist([], 'r', {'context': {'bqf': {'pattern_hl': '\%#' . getreg('/')}}})
+aug END
 
 " Plugin: nerdtree {{{2
 nnoremap <leader>n :NERDTreeToggle<CR>
