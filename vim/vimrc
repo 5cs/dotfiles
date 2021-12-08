@@ -669,17 +669,18 @@ function! s:histexec(cmd)
   call histadd('cmd', a:cmd) | execute a:cmd
 endfunction
 
-nnoremap <silent> <leader>p  :<C-u>Files<CR>
-nnoremap <silent> <leader>gs :<C-u>GFiles?<CR>
-nnoremap <silent> <leader>b  :<C-u>Buffers<CR>
-nnoremap <silent>         S  :call <SID>histexec('Rg <C-r><C-w>')<CR>
-nnoremap <silent> <leader>f  :call <SID>histexec('Rg <C-r>"')<CR>
-nnoremap <silent> <leader>F  :call <SID>histexec('Rg! <C-r>"')<CR>
-nnoremap          <leader>r  :<C-u>Rg<Space>
-nnoremap          <leader>R  :<C-u>Rg!<Space>
-nnoremap <silent> <leader>c  :<C-u>History:<CR>
-nnoremap <silent> <leader>s  :<C-u>History/<CR>
-nnoremap <silent> <C-x><C-j> :<C-u>Marks<CR>
+nnoremap <silent> <leader>ff :<C-u>Files<CR>
+nnoremap <silent> <leader>fg :<C-u>GFiles?<CR>
+nnoremap <silent> <leader>fb :<C-u>Buffers<CR>
+nnoremap <silent> <leader>fc :<C-u>BCommits<CR>
+nnoremap <silent> <leader>fs :call <SID>histexec('Rg <C-r><C-w>')<CR>
+nnoremap <silent> <leader>fy :call <SID>histexec('Rg <C-r>"')<CR>
+nnoremap <silent> <leader>fY :call <SID>histexec('Rg! <C-r>"')<CR>
+nnoremap          <leader>fr :<C-u>Rg<Space>
+nnoremap          <leader>fR :<C-u>Rg!<Space>
+nnoremap <silent> <leader>f; :<C-u>History:<CR>
+nnoremap <silent> <leader>f/ :<C-u>History/<CR>
+nnoremap <silent> <leader>fm :<C-u>Marks<CR>
 
 " Plugin: nerdtree {{{2
 nnoremap <leader>n :NERDTreeToggle<CR>
