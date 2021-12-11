@@ -34,7 +34,7 @@ Plug 'rhysd/git-messenger.vim'
 Plug 'tweekmonster/startuptime.vim'
 Plug 'justinmk/vim-sneak'
 Plug 'junegunn/vim-easy-align'
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'lambdalisue/fern.vim'
 Plug 'andymass/vim-matchup'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'wellle/targets.vim'
@@ -417,10 +417,14 @@ function! QuickFixTextFunc(info) abort
 endfunction
 
 function s:quit_qflist()
-  if getloclist(0, {'winid': 0}).winid == 0
+  let qid = getqflist({'winid': 0}).winid
+  let lid = getloclist(0, {'winid': 0}).winid
+  if qid == 0 && lid == 0
+    execute 'quit'
+  elseif lid == 0
     execute 'ccl'
   else
-    if getqflist({'winid': 0}).winid == 0
+    if qid == 0
       execute 'lcl'
     else
       echo ' [q]uickfix, [l]ocation ? '
@@ -708,14 +712,38 @@ aug Grepper
   au User Grepper ++nested call setqflist([], 'r', {'context': {'bqf': {'pattern_hl': '\%#' . getreg('/')}}})
 aug END
 
-" Plugin: nerdtree {{{2
-nnoremap <leader>n :NERDTreeToggle<CR>
-
-augroup vimrc
-  " autocmd VimEnter * NERDTree | wincmd p
-  autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 &&
-        \ exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-augroup END
+" Plugin: fern.vim {{{2
+nmap <leader>d :Fern . -drawer -reveal=% -toggle -keep<CR>
+aug vimrc
+  au FileType fern call s:init_fern()
+aug END
+function! s:init_fern()
+  nmap <buffer><expr>
+        \ <Plug>(fern-my-open-or-expand-or-collapse)
+        \ fern#smart#leaf(
+        \   "\<Plug>(fern-action-open)",
+        \   "\<Plug>(fern-action-expand)",
+        \   "\<Plug>(fern-action-collapse)",
+        \ )
+  nmap <buffer> <enter> <Plug>(fern-my-open-or-expand-or-collapse)
+  nmap <buffer> o <Plug>(fern-action-open:edit)
+  nmap <buffer> O <Plug>(fern-action-open:edit)<C-w>p
+  nmap <buffer> t <Plug>(fern-action-open:tabedit)
+  nmap <buffer> T <Plug>(fern-action-open:tabedit)gT
+  nmap <buffer> s <Plug>(fern-action-open:split)
+  nmap <buffer> S <Plug>(fern-action-open:split)<C-w>p
+  nmap <buffer> v <Plug>(fern-action-open:vsplit)
+  nmap <buffer> V <Plug>(fern-action-open:vsplit)<C-w>p
+  nmap <buffer> n <Plug>(fern-action-new-path)
+  nmap <buffer> M <Plug>(fern-action-rename)
+  nmap <buffer> i <Plug>(fern-action-enter)
+  nmap <buffer> u <Plug>(fern-action-leave)
+  nmap <buffer> r <Plug>(fern-action-reload)
+  nmap <buffer> cd <Plug>(fern-action-cd)
+  nmap <buffer> dd <Plug>(fern-action-remove)
+  nmap <buffer> qq :<C-u>quit<CR>
+  nmap <buffer> <C-l> <C-w>l
+endfunction
 
 " Plugin: vim-oscyank {{{2
 autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '' | OSCYankReg " | endif
