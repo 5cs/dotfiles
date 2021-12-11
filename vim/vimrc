@@ -713,6 +713,7 @@ aug Grepper
 aug END
 
 " Plugin: fern.vim {{{2
+let g:fern#disable_default_mappings = 1
 nmap <leader>d :Fern . -drawer -reveal=% -toggle -keep<CR>
 aug vimrc
   au FileType fern call s:init_fern()
@@ -726,6 +727,8 @@ function! s:init_fern()
         \   "\<Plug>(fern-action-collapse)",
         \ )
   nmap <buffer> <enter> <Plug>(fern-my-open-or-expand-or-collapse)
+  nmap <buffer> h <Plug>(fern-action-collapse)
+  nmap <buffer> l <Plug>(fern-action-open-or-expand)
   nmap <buffer> o <Plug>(fern-action-open:edit)
   nmap <buffer> O <Plug>(fern-action-open:edit)<C-w>p
   nmap <buffer> t <Plug>(fern-action-open:tabedit)
@@ -735,14 +738,16 @@ function! s:init_fern()
   nmap <buffer> v <Plug>(fern-action-open:vsplit)
   nmap <buffer> V <Plug>(fern-action-open:vsplit)<C-w>p
   nmap <buffer> n <Plug>(fern-action-new-path)
+  nmap <buffer> m <Plug>(fern-action-move)
   nmap <buffer> M <Plug>(fern-action-rename)
+  nmap <buffer> <C-j> <Plug>(fern-action-mark)j
+  nmap <buffer> <C-k> k<Plug>(fern-action-mark)
   nmap <buffer> i <Plug>(fern-action-enter)
   nmap <buffer> u <Plug>(fern-action-leave)
   nmap <buffer> r <Plug>(fern-action-reload)
   nmap <buffer> cd <Plug>(fern-action-cd)
   nmap <buffer> dd <Plug>(fern-action-remove)
   nmap <buffer> qq :<C-u>quit<CR>
-  nmap <buffer> <C-l> <C-w>l
 endfunction
 
 " Plugin: vim-oscyank {{{2
