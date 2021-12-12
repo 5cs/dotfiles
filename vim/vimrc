@@ -850,7 +850,7 @@ let g:tagbar_type_vim = {
 
 " Plugin: vim-commentary {{{2
 autocmd FileType c,cpp,cs,java setlocal commentstring=//\ %s
-noremap <leader>/ :Commentary<CR>
+nnoremap -- :Commentary<CR>
 
 " Plugin: vim-easy-align {{{2
 xmap ga <Plug>(EasyAlign)
