@@ -794,6 +794,9 @@ nnoremap <leader>gC :Git commit --amend<space>
 nnoremap <leader>gd :Git difftool -y<space>
 nnoremap <leader>gh :Gvdiffsplit HEAD~
 nnoremap <leader>ge :Gedit<CR>
+aug vimrc
+  au User FugitiveIndex ++nested call <SID>init_fugitive()
+aug END
 
 function! GitIndex()
   let bufname = bufname('%')
@@ -807,18 +810,18 @@ function! GitIndex()
   endif
 endfunction
 
-augroup vimrc
-  autocmd User FugitiveIndex nmap <buffer> <C-n> ]c
-  autocmd User FugitiveIndex nmap <buffer> <C-p> [c
-  autocmd User FugitiveIndex nmap <buffer> <C-s> s
-  autocmd User FugitiveIndex nmap <buffer> <C-u> u
-  autocmd User FugitiveIndex nmap <buffer>     a -
-  autocmd User FugitiveIndex nmap <buffer>    ]f ]/
-  autocmd User FugitiveIndex nmap <buffer>    [f [/
-  autocmd User FugitiveIndex nmap <buffer>   vsp dv
-  autocmd User FugitiveIndex nmap <buffer>    sp dh
-  autocmd User FugitiveIndex nmap <buffer> <Esc> dq
-augroup END
+function s:init_fugitive()
+  nmap <buffer> <C-n> ]c
+  nmap <buffer> <C-p> [c
+  nmap <buffer> <C-s> s
+  nmap <buffer> <C-u> u
+  nmap <buffer>     a -
+  nmap <buffer>    ]f ]/
+  nmap <buffer>    [f [/
+  nmap <buffer>   vsp dv
+  nmap <buffer>    sp dh
+  nmap <buffer> <Esc> dq
+endfunction
 
 " Plugin: git-messenger.vim {{{2
 let g:git_messenger_no_default_mappings = 0
