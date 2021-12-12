@@ -271,22 +271,17 @@ inoremap <silent> <F2> <ESC>:Tabe<CR>
 command! -nargs=* -complete=file Tabe call Tabe(<f-args>)
 function! Tabe(...)
   if a:0 != 0
-    for fn in a:000
-      execute printf('tabe %s', fn)
-    endfor
-    return 0
-  else
-    tab split
-    return 1
+    for fn in a:000 | exe printf('tabe %s', fn) | endfor | return v:false
   endif
+  tab split | return v:true
 endfunction
 
 " Editting {{{2
 nnoremap <silent> <F5> :Hexe<CR>
 nnoremap <F6> :Hexw<space>
 
-command! -nargs=? -complete=file Hexe :let v=Tabe(<f-args>)
-      \ | exe '%!xxd' | set filetype=xxd | exe (v ? 'q' : '')
+command! -nargs=? -complete=file Hexe :let s:v=Tabe(<f-args>)
+      \ | exe '%!xxd' | set filetype=xxd | exe (s:v ? 'q' : '')
 command! -nargs=1 -complete=file Hexw exe '%!xxd -r' | set binary
       \ | set filetype= | sav! <args>
 
