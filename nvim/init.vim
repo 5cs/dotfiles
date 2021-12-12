@@ -83,6 +83,7 @@ require('gitsigns').setup {
     ['n <leader>hb'] = '<cmd>lua require"gitsigns".blame_line(true)<CR>',
     ['n <leader>hS'] = '<cmd>lua require"gitsigns".stage_buffer()<CR>',
     ['n <leader>hU'] = '<cmd>lua require"gitsigns".reset_buffer_index()<CR>',
+    ['n <leader>qh'] = '<cmd>lua require"gitsigns".setqflist("all")<CR>',
 
     -- Text objects
     ['o ih'] = ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>',
