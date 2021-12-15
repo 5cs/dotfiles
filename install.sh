@@ -147,10 +147,10 @@ function __vim() {
   if [ ! -e ~/.vimrc ]; then ln -sf $DIR/vim/vimrc ~/.vimrc; fi
   yes | vim -c "PlugInstall --sync" -c "PlugUpdate --sync" -c "qall"
   # coc-vim
-  ln -sf $DIR/vim/coc-settings.json ~/.vim/coc-settings.json
+  ln -sf $DIR/nvim/coc-settings.json ~/.vim/coc-settings.json
   vim -c ":call coc#util#install()" -c "qall"
   # argtextobj
-  ln -sf $DIR/vim/autoload/argtextobj.vim ~/.vim/autoload/argtextobj.vim
+  ln -sf $DIR/nvim/autoload/argtextobj.vim ~/.vim/autoload/argtextobj.vim
 }
 
 
@@ -162,13 +162,12 @@ function __nvim() {
   ln -sf $PKG/nvim/bin/nvim $BIN/nvim
   mkdir -p ~/.config/nvim/
   ln -sf $DIR/nvim/init.vim ~/.config/nvim/init.vim
-  if [ ! -e ~/.vimrc ]; then ln -sf $DIR/vim/vimrc ~/.vimrc; fi
   nvim -c "PlugInstall --sync" -c "PlugUpdate --sync" -c "qall"
   # coc-nvim
-  ln -sf $DIR/vim/coc-settings.json ~/.config/nvim/coc-settings.json
+  ln -sf $DIR/nvim/coc-settings.json ~/.config/nvim/coc-settings.json
   nvim -c ":call coc#util#install()" -c "qall"
   # argtextobj
-  ln -sf $DIR/vim/autoload/argtextobj.vim \
+  ln -sf $DIR/nvim/autoload/argtextobj.vim \
     ~/.local/share/nvim/site/autoload/argtextobj.vim
 }
 
