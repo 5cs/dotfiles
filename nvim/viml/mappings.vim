@@ -2,6 +2,8 @@ nnoremap Y y$
 for x in ['n', 'N', '*', '#', 'g*', 'g#']
   execute printf('nnoremap %s %szzzv', x, x)
 endfor
+nnoremap Q q
+nnoremap q <nop>
 nnoremap T <C-w>gf
 nnoremap U     :execute 'ea ' . v:count1 . 'f'<CR>
 nnoremap <M-r> :execute 'lat ' . v:count1 . 'f'<CR>
