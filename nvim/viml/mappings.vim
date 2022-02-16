@@ -87,6 +87,7 @@ nnoremap <silent> \t :+tabm<CR>:call repeat#set("\\t")<CR>
 nnoremap <silent> \T :-tabm<CR>:call repeat#set("\\T")<CR>
 if has('nvim')
   tnoremap <C-\> <C-\><C-n>
+  tnoremap [[ <C-\><C-n>
   tnoremap qt <C-\><C-n>:tabc<CR>
   tnoremap [t <C-\><C-n>:tabp<CR>
   tnoremap ]t <C-\><C-n>:tabn<CR>
