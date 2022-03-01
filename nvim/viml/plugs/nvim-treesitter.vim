@@ -4,7 +4,8 @@ require'nvim-treesitter.configs'.setup {
     'bash',
     'c',
     'cpp',
-    'python'
+    'python',
+    'go'
   },
   ignore_install = { 'javascript' },
   highlight = {
