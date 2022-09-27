@@ -59,13 +59,13 @@ endfunction
 function! s:goto_definition_fallback(...) abort
   if exists('g:did_coc_loaded') &&
     \ coc#status() =~ 'requesting' | return | endif
-    if s:goto_definition_state == 'Done'
-      let s:goto_definition_state = 'Initial'
-      return
-    endif
-    " lsp timeout
-    let s:goto_definition_state = 'Done'
-    call s:taglist()
+  if s:goto_definition_state == 'Done'
+    let s:goto_definition_state = 'Initial'
+    return
+  endif
+  " lsp timeout
+  let s:goto_definition_state = 'Done'
+  call s:taglist()
 endfunction
 
 function! s:taglist()
