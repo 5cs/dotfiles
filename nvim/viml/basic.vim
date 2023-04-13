@@ -19,6 +19,7 @@ set cursorline
 set laststatus=2
 set fileencodings=ucs-bom,utf-8,gb18030,cp936,latin1
 set list
+set clipboard+=unnamedplus
 set t_u7= " https://github.com/vim/vim/issues/390#issuecomment-531477332
 set t_RV= " https://stackoverflow.com/questions/21618614/vim-shows-garbage-characters
 if !has('gui_running')

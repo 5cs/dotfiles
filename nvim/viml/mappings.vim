@@ -63,6 +63,8 @@ nnoremap <silent><expr> <space><space>
   \ (v:count ? ":<C-u>:call KeepChangeMarksExec('edit')<CR>" : '')
   \ . ':nohlsearch' . (has('diff') ? '\|diffupdate' : '') . '<CR>'
 
+xnoremap <leader>p "_dP
+
 " Window size
 nnoremap <S-up>    2<C-w>+
 nnoremap <S-down>  2<C-w>-
