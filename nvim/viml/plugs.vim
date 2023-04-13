@@ -52,6 +52,7 @@ if has('nvim')
   Plug 'phaazon/hop.nvim'
   Plug 'nvim-lua/plenary.nvim'
   Plug 'lewis6991/gitsigns.nvim'
+  Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 else
   Plug 'airblade/vim-gitgutter'
   Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
