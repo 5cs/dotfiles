@@ -18,3 +18,5 @@ tags
 # Temp
 *~
 .DS_Store
+
+.nvimlog

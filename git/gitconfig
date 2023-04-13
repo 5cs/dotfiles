@@ -1,0 +1,18 @@
+[user]
+	email = name@gmail.com
+	name = Name
+[core]
+	excludesfile = ~/.dotfiles/git/gitignore_global
+	editor = nvim
+[color]
+	ui = auto
+[alias]
+	graph = log --graph --all --pretty=format:\"%C(yellow)%h%Cblue%d %Creset%s %C(green)%cr%Creset (%C(magenta)%an%Creset)\"
+	fp = fetch --all --prune
+	ll = log --oneline
+	ca = commit --amend
+	ce = commit --amend --no-edit
+#[http]
+#	proxy = socks5://127.0.0.1:1080
+#[https]
+#	proxy = socks5://127.0.0.1:1080
