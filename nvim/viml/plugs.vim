@@ -43,6 +43,7 @@ Plug 'ap/vim-css-color'
 Plug 'mhinz/vim-startify'
 Plug 'rust-lang/rust.vim'
 Plug 'mhinz/vim-grepper'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 if has('nvim')
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
   Plug 'nvim-treesitter/nvim-treesitter-textobjects'
