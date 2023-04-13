@@ -19,6 +19,14 @@
         "--completion-parse=always",
         "--completion-style=detailed"
       ]
+    },
+    "golang": {
+      "command": "~/go/bin/gopls",
+      "rootPatterns": ["go.mod", ".git/"],
+      "filetypes": ["go"],
+      "initializationOptions": {
+        "usePlaceholders": true
+      }
     }
   },
   "initializationOptions": {

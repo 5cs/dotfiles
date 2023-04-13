@@ -9,6 +9,7 @@ augroup RunScript
   autocmd BufRead,BufNewFile *.stp set filetype=stp
   autocmd FileType sh     xnoremap <buffer> <leader>x :w !bash<CR>
   autocmd FileType python xnoremap <buffer> <leader>x :w !python3<CR>
+  autocmd FileType go     setlocal shiftwidth=2 softtabstop=2 tabstop=2
 augroup END
 
 augroup ViewEditBin
