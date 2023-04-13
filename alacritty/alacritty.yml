@@ -1,0 +1,165 @@
+# Configuration for Alacritty, the GPU enhanced terminal emulator.
+
+# Any items in the `env` entry below will be added as
+# environment variables. Some entries may override variables
+# set by alacritty itself.
+env:
+  # TERM variable
+  #
+  # This value is used to set the `$TERM` environment variable for
+  # each instance of Alacritty. If it is not present, alacritty will
+  # check the local terminfo database and use `alacritty` if it is
+  # available, otherwise `xterm-256color` is used.
+  TERM: xterm-256color
+
+selection:
+  text: CellBackground
+  background: CellForeground
+
+font:
+  normal:
+    # family: "Source Code Pro"
+    # style: "Regular"
+    family: "Hack Nerd Font"
+    # style: "Regular"
+  size: 13.5
+  # offset:
+  #   x: 0
+  #   y: 0
+  # scale_with_dpi: true
+
+# # Font configuration (changes require restart)
+# font:
+#   # The normal (roman) font face to use.
+#   # Style can be specified to pick a specific face.
+#   normal:
+#     family: "Fira Code"
+#     # family: Iosevka
+#     # family: "Fira Code"
+#     # family: "Source Code Pro"
+#     # style: Retina
+# 
+#   # The bold font face
+#   bold:
+#     family: "Fira Code"
+#     # family: Iosevka
+#     # family: "Source Code Pro"
+# 
+#   # The italic font face
+#   italic:
+#     family: "Fira Code"
+#     # family: Iosevka
+#     # family: "Source Code Pro"
+#     # style: "Medium Italic"
+# 
+#   # Point size of the font
+#   size: 11.0
+# 
+#   # Offset is the extra space around each character. offset.y can be thought of
+#   # as modifying the linespacing, and offset.x as modifying the letter spacing.
+#   offset:
+#     x: 0
+#     y: 0
+# 
+#   # Glyph offset determines the locations of the glyphs within their cells with
+#   # the default being at the bottom. Increase the x offset to move the glyph to
+#   # the right, increase the y offset to move the glyph upward.
+#   glyph_offset:
+#     x: 0
+#     y: 0
+# 
+#   # Thin stroke font rendering (macOS only)
+#   #
+#   # Thin strokes are suitable for retina displays, but for non-retina you
+#   # probably want this set to false.
+#   #
+#   # macOS >= 10.14.x:
+#   #
+#   # If the font quality on non-retina display looks bad then set
+#   # `use_thin_strokes` to `true` and enable font smoothing by running the
+#   # following command:
+#   #   `defaults write -g CGFontRenderingFontSmoothingDisabled -bool NO`
+#   #
+#   # This is a global setting and will require a log out or restart to take
+#   # effect.
+#   use_thin_strokes: true
+# 
+# # When true, bold text is drawn using the bright variant of colors.
+# draw_bold_text_with_bright_colors: false
+
+# Colors (Gruvbox dark)
+colors:
+  # Default colors
+  primary:
+    # hard contrast: background = '#1d2021'
+    background: '#282828'
+    # soft contrast: background = '#32302f'
+    foreground: '#ebdbb2'
+
+  # Normal colors
+  normal:
+    black:   '#282828'
+    red:     '#cc241d'
+    green:   '#98971a'
+    yellow:  '#d79921'
+    blue:    '#458588'
+    magenta: '#b16286'
+    cyan:    '#689d6a'
+    white:   '#a89984'
+
+  # Bright colors
+  bright:
+    black:   '#928374'
+    red:     '#fb4934'
+    green:   '#b8bb26'
+    yellow:  '#fabd2f'
+    blue:    '#83a598'
+    magenta: '#d3869b'
+    cyan:    '#8ec07c'
+    white:   '#ebdbb2'
+# Background opacity
+#
+# Window opacity as a floating point number from `0.0` to `1.0`.
+# The value `0.0` is completely transparent and `1.0` is opaque.
+window:
+  opacity: 0.95
+  decorations: none
+  dimensions:
+     columns: 150
+     lines: 50
+  #dimensions:
+  #  columns: 240
+  #  lines: 66
+# background_opacity: 0.95
+
+# Shell
+#
+# You can set `shell.program` to the path of your favorite shell, e.g. `/bin/fish`.
+# Entries in `shell.args` are passed unmodified as arguments to the shell.
+#
+# Default:
+#   - (macOS) /bin/bash --login
+#   - (Linux/BSD) user login shell
+#   - (Windows) powershell
+# shell:
+#   program: /bin/bash
+#  args:
+#    - --login
+#shell:
+#  program: C:\Program Files\Git\bin\bash
+
+key_bindings:
+  - { key: Up,       mods: Alt,     chars: "\x1b[1;5A"                   }
+  - { key: Down,     mods: Alt,     chars: "\x1b[1;5B"                   }
+  - { key: Left,     mods: Alt,     chars: "\x1bb"                       }
+  - { key: Right,    mods: Alt,     chars: "\x1bf"                       }
+  - { key: Key1,     mods: Alt,     chars: "\x1b1"                       }
+  - { key: Key2,     mods: Alt,     chars: "\x1b2"                       }
+  - { key: Key3,     mods: Alt,     chars: "\x1b3"                       }
+  - { key: Key4,     mods: Alt,     chars: "\x1b4"                       }
+  - { key: Key5,     mods: Alt,     chars: "\x1b5"                       }
+  - { key: Key6,     mods: Alt,     chars: "\x1b6"                       }
+  - { key: Key7,     mods: Alt,     chars: "\x1b7"                       }
+  - { key: Key8,     mods: Alt,     chars: "\x1b8"                       }
+  - { key: Key9,     mods: Alt,     chars: "\x1b9"                       }
+  - { key: Key0,     mods: Alt,     chars: "\x1b0"                       }
