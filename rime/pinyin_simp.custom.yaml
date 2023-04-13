@@ -1,0 +1,12 @@
+# macOS: ~/Library/Rime
+# Linux: ~/.config/ibus/rime
+# Windows: %APPDATA%\Rime
+
+patch:
+  # 模糊音
+  speller:
+    alphabet: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA
+    delimiter: " '"
+    algebra:
+      - derive/([ei])n$/$1ng/  # eng => en, ing => in
+      - derive/([ei])ng$/$1n/  # en => eng, in => ing

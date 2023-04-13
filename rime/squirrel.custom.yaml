@@ -1,0 +1,14 @@
+# macOS: ~/Library/Rime
+# Linux: ~/.config/ibus/rime
+# Windows: %APPDATA%\Rime
+
+patch:
+  # vim 模式，esc 退出编辑模式并切换为英文输入
+  app_options:
+    # osascript -e 'id of app "iTerm.app"' 获取包名
+    com.googlecode.iterm2:
+      ascii_mode: true
+      vim_mode: true
+    io.alacritty:
+      ascii_mode: true
+      vim_mode: true

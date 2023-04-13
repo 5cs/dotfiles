@@ -1,0 +1,26 @@
+# macOS: ~/Library/Rime
+# Linux: ~/.config/ibus/rime
+# Windows: %APPDATA%\Rime
+
+patch:
+  # 键位
+  key_binder/bindings:
+    - { when: composing, accept: Control+p, send: Up }
+    - { when: composing, accept: Control+n, send: Down }
+    - { when: composing, accept: Control+k, send: Page_Up }
+    - { when: composing, accept: Control+j, send: Page_Down }
+    - { when: composing, accept: Control+h, send: Left }
+    - { when: composing, accept: Control+l, send: Right }
+    - { when: composing, accept: Control+a, send: Home }
+    - { when: composing, accept: Control+e, send: End }
+    - { when: composing, accept: Control+d, send: Delete }
+    - { when: composing, accept: Control+b, send: BackSpace }
+    - { when: composing, accept: Control+g, send: Escape }
+    - { when: composing, accept: Control+bracketleft, send: Escape }
+    - { when: composing, accept: Tab, send: Shift+Right }
+    - { when: always, accept: Shift+space, select: .next }
+    - { when: always, accept: Control+comma, toggle: traditionalization }
+  # 切换中英文
+  ascii_composer:
+    switch_key:
+      Shift_L: commit_code
