@@ -1,0 +1,3 @@
+#!/bin/sh
+
+sudo docker run -it --privileged -v /dev/hugepages:/dev/hugepages --mount=type=bind,source=/dev,target=/dev --cap-add=SYS_PTRACE --ulimit core=-1 --security-opt seccomp=unconfined devbox bash
