@@ -76,6 +76,10 @@ nnoremap <silent><C-h> :<C-u>call TmuxNavigate('h')<CR>
 nnoremap <silent><C-j> :<C-u>call TmuxNavigate('j')<CR>
 nnoremap <silent><C-k> :<C-u>call TmuxNavigate('k')<CR>
 nnoremap <silent><C-l> :<C-u>call TmuxNavigate('l')<CR>
+if has('nvim')
+  tnoremap <silent><C-n> <down>
+  tnoremap <silent><C-p> <up>
+endif
 
 nnoremap qt :<C-u>tabc<CR>
 for i in range(1, 9)
